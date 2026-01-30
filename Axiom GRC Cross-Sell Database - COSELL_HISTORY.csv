@@ -1,0 +1,13 @@
+DealID,ClientName,Industry,CompanySize,ProductsWon,DealValue,DateClosed
+CS001,TechCorp Manufacturing,Manufacturing,SME,"VW_ELEARNING,WN_H&S",42000,2024-01-15
+CS002,Healthcare Solutions Ltd,Healthcare,Enterprise,"VW_ELEARNING,BARBOUR_EHS",95000,2024-02-20
+CS003,BuildSafe Construction,Construction,SME,"VW_ELEARNING,WN_H&S,IMSM_ISO",58000,2024-03-10
+CS004,SecureFinance Group,Financial Services,Enterprise,"VW_ELEARNING,BARBOUR_EHS",110000,2024-04-05
+CS005,RetailChain UK,Retail,SME,"VW_ELEARNING,WN_H&S",45000,2024-05-12
+CS006,MedTech Innovations,Healthcare,Enterprise,"VW_ELEARNING,DPO_SERVICE,BARBOUR_EHS",125000,2024-06-08
+CS007,PropertyDev Solutions,Property,SME,"VW_ELEARNING,BARBOUR_EHS",52000,2024-07-22
+CS008,LogisticsPlus,Logistics,Enterprise,"VW_ELEARNING,WN_H&S,BULLETPROOF_CYBER",98000,2024-08-14
+CS009,EduTrust Academy,Education,SME,"VW_ELEARNING,CORESTREAM_GRC",48000,2024-09-03
+CS010,HospitalityFirst,Hospitality,SME,"VW_ELEARNING,WN_H&S",41000,2024-09-28
+CS011,FinServe Partners,Financial Services,Enterprise,"VW_ELEARNING,VANTIFY_REG,DPO_SERVICE",115000,2024-10-05
+CS012,Industrial Systems,Manufacturing,Enterprise,"VW_ELEARNING,BARBOUR_EHS,IMSM_ISO",142000,2024-10-12
