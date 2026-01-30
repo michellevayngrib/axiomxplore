@@ -2651,7 +2651,7 @@
          MOBILE NAVIGATION - Complete restructure
          ======================================== */
       .top-nav {
-        padding: 10px 0;
+        padding: 5px 0;
       }
 
       .nav-logo {
@@ -2661,7 +2661,7 @@
         transform: none;
         justify-content: center;
         width: 100%;
-        padding: 10px 15px;
+        padding: 5px 15px;
         gap: 8px;
       }
 
@@ -2674,7 +2674,7 @@
       }
 
       .nav-container {
-        padding: 10px 15px;
+        padding: 5px 15px;
         width: 100%;
       }
 
@@ -2971,18 +2971,20 @@
       }
 
       /* ========================================
-         MOBILE HOME PAGE
+         MOBILE HOME PAGE - reduced spacing
          ======================================== */
       .home-page {
-        padding: 30px 0;
+        padding: 15px 0;
       }
 
       .home-title {
         font-size: 1.8em;
+        margin-bottom: 8px;
       }
 
       .home-subtitle {
         font-size: 1em;
+        margin-bottom: 30px;
       }
 
       .journey-grid {
@@ -3086,11 +3088,166 @@
         padding: 25px 20px;
       }
 
-      /* Team member carousel on About page */
+      /* Team member carousel on About page - show 2 items on mobile */
       .team-member-card,
       .solution-item {
-        flex: 0 0 calc(100% - 20px);
-        min-width: 250px;
+        flex: 0 0 calc(50% - 10px);
+        min-width: 140px;
+      }
+
+      /* Touch-responsive carousels */
+      .team-carousel,
+      .solutions-carousel {
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .team-carousel::-webkit-scrollbar,
+      .solutions-carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .team-member-card,
+      .solution-item {
+        scroll-snap-align: start;
+      }
+
+      /* Hide carousel nav buttons on mobile - use touch scroll */
+      .carousel-nav-btn {
+        display: none;
+      }
+
+      /* About Us page - show all companies stacked on mobile */
+      .about-mobile-all-companies {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .about-mobile-company-section {
+        scroll-margin-top: 80px;
+      }
+
+      /* Cross-sell Finder - 2 column button layout */
+      .opportunity-actions {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .opportunity-btn {
+        padding: 10px 12px !important;
+        font-size: 0.8em !important;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .nav-tab-submit-lead {
+        font-size: 0.8em !important;
+        padding: 10px 12px !important;
+      }
+
+      /* Cross-sell History - keep products on one row */
+      .history-row {
+        flex-direction: row !important;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .history-card {
+        padding: 15px !important;
+      }
+
+      .history-product-name {
+        font-size: 0.85em !important;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+
+      .history-arrow-between {
+        flex-direction: column !important;
+        width: auto !important;
+        min-width: 40px;
+        padding: 0 5px !important;
+      }
+
+      .history-arrow-icons {
+        flex-direction: column !important;
+      }
+
+      .history-client-count {
+        font-size: 0.75em !important;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        white-space: nowrap;
+      }
+
+      .history-company {
+        font-size: 0.75em !important;
+      }
+
+      .history-detail-btn {
+        font-size: 0.75em !important;
+        padding: 6px 10px !important;
+      }
+
+      /* Contacts - improved mobile layout */
+      .contact-row-mobile {
+        display: grid !important;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        gap: 4px 12px;
+        padding: 16px !important;
+      }
+
+      .contact-name-mobile {
+        font-size: 0.95em !important;
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .contact-role-mobile {
+        font-size: 0.85em !important;
+        grid-column: 2;
+        grid-row: 1;
+        text-align: right;
+      }
+
+      .contact-email-mobile {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .contact-company-mobile {
+        font-size: 0.85em !important;
+        grid-column: 2;
+        grid-row: 2;
+        text-align: right;
+      }
+
+      /* Knowledge Base modal - centered buttons layout */
+      .modal-badges {
+        justify-content: center !important;
+        gap: 8px !important;
+      }
+
+      .modal-badges .opportunity-btn,
+      .modal-badges a.opportunity-btn {
+        padding: 8px 14px !important;
+        font-size: 0.8em !important;
+      }
+
+      .modal-jump-container {
+        justify-content: center !important;
+        margin-top: 8px;
+      }
+
+      .modal-jump-btn {
+        font-size: 0.85em !important;
+        padding: 8px 14px !important;
       }
 
       /* Modal improvements - reduced margins for more content space */
@@ -3596,8 +3753,6 @@
         <h2 style="font-size: 2.2em; font-weight: 700; color: rgba(31, 41, 55, 0.85); margin-bottom: 35px;">Submit Update Request</h2>
         
         <div class="wizard-section">
-          <h3>Request Information</h3>
-          
           <div class="form-group">
             <label>Your Name *</label>
             <input type="text" id="submitterName" placeholder="Your name">
@@ -4410,12 +4565,16 @@
       let menuHtml = '';
       allCompaniesData.forEach((company, index) => {
         const activeClass = index === currentCompanyIndex ? 'active' : '';
-        menuHtml += `<button class="mobile-nav-dropdown-item ${activeClass}" onclick="selectMobileCompany('about', ${index})">${company.CompanyName}</button>`;
+        // Use scrollToCompanySection on mobile to scroll to the section
+        menuHtml += `<button class="mobile-nav-dropdown-item ${activeClass}" onclick="scrollToCompanySection(${index})">${company.CompanyName}</button>`;
       });
       menu.innerHTML = menuHtml;
 
-      // Update label
-      updateAboutMobileDropdownLabel();
+      // Update label to say "Jump to company..."
+      const label = document.getElementById('aboutMobileDropdownLabel');
+      if (label) {
+        label.textContent = 'Jump to company...';
+      }
     }
 
     // Update About dropdown label
@@ -4901,43 +5060,73 @@
       });
     }
     
-    // Create contact row (list item)
+    // Create contact row (list item) - mobile optimized layout
     function createContactRow(contact, index) {
       const row = document.createElement('div');
-      row.style.cssText = 'background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 16px; padding: 20px 24px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6); display: flex; align-items: center; justify-content: space-between; gap: 20px; transition: all 0.3s ease;';
-      
+      const isMobile = window.innerWidth <= 768;
+
       const name = contact.Name || contact.ContactID || 'Contact';
       const title = contact.Title || '';
       const email = contact.Email || '';
       const company = contact.CompanyName || '';
       const speciality = contact.Speciality || '';
       const products = contact.Products || '';
-      
-      const specialityBadge = speciality ? `<span class="product-badge badge-topic" style="margin-right: 8px;">${speciality}</span>` : '';
-      const productChips = products ? products.split(',').slice(0, 2).map(p => `<span class="industry-chip" style="margin-right: 6px;">${p.trim()}</span>`).join('') : '';
-      
-      row.innerHTML = `
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-          <h4 style="font-size: 1em; font-weight: 600; color: rgba(31, 41, 55, 0.9); margin: 0;">${name}</h4>
-          ${title ? `<p style="font-size: 1em; color: rgba(107, 114, 128, 0.8); margin: 0; line-height: 1.4;">${title}</p>` : ''}
-          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
-            ${specialityBadge}
-            ${productChips}
+
+      const specialityBadge = speciality ? `<span class="product-badge badge-topic" style="margin-right: 8px; font-size: 0.75em;">${speciality}</span>` : '';
+      const productChips = products ? products.split(',').slice(0, 2).map(p => `<span class="industry-chip" style="margin-right: 6px; font-size: 0.75em;">${p.trim()}</span>`).join('') : '';
+
+      if (isMobile) {
+        // Mobile layout: Name (left) - Role (right), Copy email (left) - Company (right)
+        row.style.cssText = 'background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 12px; padding: 14px 16px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6); display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto auto; gap: 4px 12px; transition: all 0.3s ease;';
+
+        row.innerHTML = `
+          <h4 style="font-size: 0.9em; font-weight: 600; color: rgba(31, 41, 55, 0.9); margin: 0; grid-column: 1; grid-row: 1;">${name}</h4>
+          ${title ? `<p style="font-size: 0.85em; color: rgba(107, 114, 128, 0.8); margin: 0; text-align: right; grid-column: 2; grid-row: 1;">${title}</p>` : '<span style="grid-column: 2; grid-row: 1;"></span>'}
+          <div style="grid-column: 1; grid-row: 2; display: flex; align-items: center;">
+            ${email ? `
+              <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})" style="font-size: 0.75em; padding: 2px 6px; margin: 0;">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 10px; height: 10px;">
+                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+                </svg>
+                <span>Copy email</span>
+              </button>
+            ` : ''}
           </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          ${company ? `<span style="font-size: 1em; color: rgba(107, 114, 128, 0.8); font-weight: 500;">${company}</span>` : ''}
-          ${email ? `
-            <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})">
-              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
-              </svg>
-              <span>Copy email</span>
-            </button>
+          ${company ? `<span style="font-size: 0.85em; color: rgba(107, 114, 128, 0.8); font-weight: 500; text-align: right; grid-column: 2; grid-row: 2;">${company}</span>` : '<span style="grid-column: 2; grid-row: 2;"></span>'}
+          ${(specialityBadge || productChips) ? `
+            <div style="grid-column: 1 / -1; grid-row: 3; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+              ${specialityBadge}
+              ${productChips}
+            </div>
           ` : ''}
-        </div>
-      `;
-      
+        `;
+      } else {
+        // Desktop layout (original)
+        row.style.cssText = 'background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 16px; padding: 20px 24px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6); display: flex; align-items: center; justify-content: space-between; gap: 20px; transition: all 0.3s ease;';
+
+        row.innerHTML = `
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+            <h4 style="font-size: 1em; font-weight: 600; color: rgba(31, 41, 55, 0.9); margin: 0;">${name}</h4>
+            ${title ? `<p style="font-size: 1em; color: rgba(107, 114, 128, 0.8); margin: 0; line-height: 1.4;">${title}</p>` : ''}
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+              ${specialityBadge}
+              ${productChips}
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            ${company ? `<span style="font-size: 1em; color: rgba(107, 114, 128, 0.8); font-weight: 500;">${company}</span>` : ''}
+            ${email ? `
+              <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+                </svg>
+                <span>Copy email</span>
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }
+
       return row;
     }
     
@@ -6961,7 +7150,12 @@
         // Populate mobile dropdown
         populateAboutMobileDropdown();
 
-        renderCompanyPage(0);
+        // Check if mobile and render all companies, otherwise render single page
+        if (window.innerWidth <= 768) {
+          renderAllCompaniesForMobile();
+        } else {
+          renderCompanyPage(0);
+        }
         aboutPageLoaded = true;
         dataReady.about = true;
       }).catch((error) => {
@@ -7148,7 +7342,117 @@
         behavior: 'smooth'
       });
     }
-    
+
+    // Function to render all companies for mobile view (scrollable)
+    function renderAllCompaniesForMobile() {
+      const aboutContent = document.getElementById('aboutContentArea');
+      let html = '<div class="about-mobile-all-companies">';
+
+      allCompaniesData.forEach((company, index) => {
+        const companyId = company.CompanyID || '';
+        const teamMembers = allTeamsData[companyId] || [];
+        const companyProducts = allProductsData.filter(p => p.CompanyName === company.CompanyName);
+
+        html += `
+          <div class="about-mobile-company-section" id="company-section-${index}">
+            <div class="brand-section">
+              <div class="brand-content-grid" style="${!company.VideoURL ? 'grid-template-columns: 1fr;' : ''}">
+                <div class="brand-text">
+                  <h2 style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    ${company.LogoURL ? `<img src="${company.LogoURL}" alt="${company.CompanyName} logo" style="max-width: 50px; max-height: 50px; object-fit: contain;" onerror="this.style.display='none'">` : ''}
+                    ${company.CompanyName}
+                  </h2>
+
+                  ${company.AboutText ? `<p style="color: rgba(55, 65, 81, 0.8); line-height: 1.6; margin-bottom: 20px;">${company.AboutText}</p>` : '<p style="color: rgba(107, 114, 128, 0.7); font-style: italic;">Content coming soon...</p>'}
+                  ${company.WebsiteURL ? `<a href="${company.WebsiteURL}" target="_blank" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-size: 0.95em; display: inline-block; margin-top: -10px; margin-bottom: 20px;">Learn more on the ${company.CompanyName} website ↗</a>` : ''}
+                </div>
+
+                ${company.VideoURL ? `
+                  <div class="brand-video">
+                    <iframe src="${company.VideoURL}" frameborder="0" allowfullscreen></iframe>
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Meet the Team Section -->
+              ${teamMembers.length > 0 ? `
+                <div class="company-section-divider">
+                  <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Meet the Team</h3>
+                  <div class="team-carousel-container" style="padding: 0 10px;">
+                    <div class="team-carousel-wrapper">
+                      <div class="team-carousel" id="team-carousel-mobile-${index}">
+                        ${teamMembers.map((member, memberIndex) => `
+                          <div class="team-member-card">
+                            <h4 class="team-member-name" style="margin-bottom: -2px; line-height: 1.6;">
+                              ${member.PersonName}
+                            </h4>
+                            <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
+                            ${member['Email Address'] ?
+                              `<button class="team-member-email-btn" id="email-btn-mobile-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', 'mobile-${index}', ${memberIndex})">
+                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+                                </svg>
+                                <span>Copy email</span>
+                              </button>` :
+                              ''}
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ` : ''}
+
+              <!-- Our Solutions Section -->
+              ${company.CompanyName !== 'Axiom GRC' && companyProducts.length > 0 ? `
+                <div class="company-section-divider">
+                  <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Our Solutions</h3>
+                  <div class="solutions-carousel-container" style="padding: 0 10px;">
+                    <div class="solutions-carousel-wrapper">
+                      <div class="solutions-carousel" id="solutions-carousel-mobile-${index}">
+                        ${companyProducts.map(product => `
+                          <div class="solution-item">
+                            <div class="solution-info">
+                              <h4 class="solution-name">${product.ProductName}</h4>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p style="text-align: center; margin-top: 16px; font-size: 0.9em;">
+                    <a href="#" onclick="navigateToProduct('${company.CompanyName}'); return false;" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
+                      Learn more about our solutions here →
+                    </a>
+                  </p>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      aboutContent.innerHTML = html;
+    }
+
+    // Function to scroll to a company section in mobile view
+    function scrollToCompanySection(index) {
+      const section = document.getElementById(`company-section-${index}`);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Close the dropdown
+        const menu = document.getElementById('aboutMobileDropdownMenu');
+        const btn = document.querySelector('#aboutMobileDropdown .mobile-nav-dropdown-btn');
+        if (menu) menu.classList.remove('show');
+        if (btn) btn.classList.remove('open');
+        // Update the label
+        if (allCompaniesData[index]) {
+          document.getElementById('aboutMobileDropdownLabel').textContent = allCompaniesData[index].CompanyName;
+        }
+      }
+    }
+
     // Function to navigate to Knowledge Base filtered by company
     function navigateToProduct(companyName) {
       showPage('knowledge');
