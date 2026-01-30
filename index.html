@@ -783,7 +783,12 @@
       color: rgba(107, 114, 128, 0.8);
       margin: 0;
     }
-    
+
+    /* Mobile navigation dropdown - hidden on desktop */
+    .mobile-nav-dropdown {
+      display: none;
+    }
+
     /* Knowledge Base */
     .kb-header {
       display: flex;
@@ -2636,6 +2641,12 @@
     }
     
     @media (max-width: 768px) {
+      /* Prevent horizontal scrolling on mobile */
+      html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
+
       /* ========================================
          MOBILE NAVIGATION - Complete restructure
          ======================================== */
@@ -2668,29 +2679,23 @@
       }
 
       .nav-tabs {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        padding-bottom: 5px;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 5px 0;
         width: 100%;
-        justify-content: flex-start;
-      }
-
-      .nav-tabs::-webkit-scrollbar {
-        display: none;
+        justify-content: center;
       }
 
       .nav-tab {
-        padding: 8px 14px;
-        font-size: 0.85em;
+        padding: 8px 12px;
+        font-size: 0.8em;
         white-space: nowrap;
         flex-shrink: 0;
       }
 
       .nav-tab-submit-lead {
-        padding: 8px 14px;
-        font-size: 0.85em;
+        padding: 8px 12px;
+        font-size: 0.8em;
         flex-shrink: 0;
       }
       
@@ -2820,30 +2825,96 @@
       }
 
       .about-page-container {
-        grid-template-columns: 1fr;
+        display: block;
         min-height: auto;
-        gap: 15px;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
+      /* Hide sidebar on mobile - replaced by dropdown */
       .about-sidebar {
-        position: relative;
-        top: 0;
-        min-height: auto;
-        max-height: none;
-        padding: 20px 15px;
-        order: 1;
+        display: none;
       }
 
-      .about-sidebar h3 {
-        font-size: 1em;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
+      /* Mobile dropdown navigation for About Us */
+      .mobile-nav-dropdown {
+        display: block;
+        margin-bottom: 20px;
       }
 
-      .brand-nav-item {
-        padding: 10px 12px;
-        font-size: 0.85em;
-        margin-bottom: 6px;
+      .mobile-nav-dropdown-btn {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(229, 231, 235, 0.6);
+        border-radius: 12px;
+        font-size: 0.95em;
+        font-weight: 500;
+        color: rgba(55, 65, 81, 0.85);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.2s ease;
+      }
+
+      .mobile-nav-dropdown-btn:hover {
+        background: rgba(255, 255, 255, 0.7);
+        border-color: var(--primary);
+      }
+
+      .mobile-nav-dropdown-btn .dropdown-arrow {
+        transition: transform 0.2s ease;
+      }
+
+      .mobile-nav-dropdown-btn.open .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+
+      .mobile-nav-dropdown-menu {
+        display: none;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(229, 231, 235, 0.6);
+        border-radius: 12px;
+        margin-top: 8px;
+        padding: 8px;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .mobile-nav-dropdown-menu.show {
+        display: block;
+      }
+
+      .mobile-nav-dropdown-item {
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        border: none;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 0.9em;
+        font-weight: 500;
+        color: rgba(55, 65, 81, 0.85);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .mobile-nav-dropdown-item:hover {
+        background: rgba(99, 102, 241, 0.08);
+      }
+
+      .mobile-nav-dropdown-item.active {
+        background: rgba(99, 102, 241, 0.15);
+        color: rgba(99, 102, 241, 0.95);
+        font-weight: 600;
       }
 
       .about-content-area {
@@ -2851,12 +2922,20 @@
         min-height: auto;
         overflow-y: visible;
         padding-right: 0;
-        order: 2;
+        max-width: 100%;
       }
 
       .brand-section {
         padding: 25px 20px;
         margin-bottom: 20px;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .brand-section h2 {
+        font-size: 1.4em;
+        white-space: normal;
+        word-wrap: break-word;
       }
 
       .brand-section h3 {
@@ -2874,13 +2953,21 @@
       /* ========================================
          MOBILE RESOURCES PAGE
          ======================================== */
+      .resources-container {
+        display: block;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      /* Hide sidebar on mobile - replaced by dropdown */
       .resources-company-nav {
-        padding: 20px 15px;
-        min-height: auto;
+        display: none;
       }
 
       .resources-content-panel {
         padding: 20px 15px;
+        max-height: none;
+        max-width: 100%;
       }
 
       /* ========================================
@@ -2911,10 +2998,17 @@
          ======================================== */
       .main-content {
         padding: 20px 15px;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
-      .page-section h2 {
-        font-size: 1.6em;
+      /* Standardize ALL section titles to 1.6em */
+      .page-section h2,
+      .wizard-container h2,
+      .about-page-header h2,
+      #navigatorSubTab h2,
+      #historySubTab h2 {
+        font-size: 1.6em !important;
       }
 
       /* Better touch targets */
@@ -2922,19 +3016,60 @@
         min-height: 44px;
       }
 
-      /* Card improvements */
+      /* Card improvements - smaller on mobile */
+      .brand-card,
       .product-card {
-        min-height: 260px;
+        padding: 18px 14px;
+        min-height: 200px;
+        border-radius: 16px;
       }
 
       .product-card-inner {
-        min-height: 260px;
+        min-height: 200px;
       }
 
       .product-card-front,
       .product-card-back {
-        min-height: 260px;
-        padding: 20px 15px;
+        min-height: 200px;
+        padding: 18px 14px;
+      }
+
+      .brand-header {
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .brand-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1em;
+        border-radius: 10px;
+      }
+
+      .brand-info h3 {
+        font-size: 1em;
+        margin-bottom: 2px;
+      }
+
+      .brand-location {
+        font-size: 0.75em;
+      }
+
+      .brand-stats {
+        font-size: 0.8em;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .brand-highlight {
+        font-size: 0.85em;
+        margin-bottom: 12px;
+        -webkit-line-clamp: 2;
+      }
+
+      .brand-action {
+        padding: 10px;
+        font-size: 0.85em;
       }
 
       /* Cross-sell page improvements */
@@ -2958,12 +3093,60 @@
         min-width: 250px;
       }
 
-      /* Modal improvements */
+      /* Modal improvements - reduced margins for more content space */
       .modal-content {
-        width: 95%;
-        max-width: 95%;
-        margin: 10px;
-        padding: 20px;
+        width: 98%;
+        max-width: 98%;
+        margin: 5px;
+        padding: 0;
+        border-radius: 16px;
+      }
+
+      .modal-header {
+        padding: 20px 15px;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .modal-body {
+        padding: 15px;
+        max-height: calc(90vh - 150px);
+      }
+
+      .modal-section {
+        padding: 16px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+      }
+
+      .modal-section h3 {
+        font-size: 1em;
+        margin-bottom: 8px;
+      }
+
+      .modal-section p,
+      .modal-section ul li {
+        font-size: 0.9em;
+        line-height: 1.5;
+      }
+
+      .modal-title {
+        font-size: 1.3em;
+      }
+
+      .modal-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2em;
+      }
+
+      .modal-badges {
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .modal-badge {
+        padding: 6px 12px;
+        font-size: 0.8em;
       }
     }
 
@@ -2976,17 +3159,23 @@
       }
 
       .nav-tab {
-        padding: 8px 10px;
-        font-size: 0.8em;
+        padding: 6px 8px;
+        font-size: 0.75em;
       }
 
       .nav-tab-submit-lead {
-        padding: 8px 10px;
-        font-size: 0.8em;
+        padding: 6px 8px;
+        font-size: 0.75em;
       }
 
+      /* Standardize ALL section titles on extra small screens */
+      .page-section h2,
+      .wizard-container h2,
+      .about-page-header h2,
+      #navigatorSubTab h2,
+      #historySubTab h2,
       .kb-title {
-        font-size: 1.4em;
+        font-size: 1.4em !important;
       }
 
       .view-btn {
@@ -2998,16 +3187,16 @@
         font-size: 1.5em;
       }
 
-      .about-page-header h2 {
-        font-size: 1.4em !important;
+      .brand-section {
+        padding: 16px 12px;
       }
 
-      .brand-section {
-        padding: 20px 15px;
+      .brand-section h2 {
+        font-size: 1.2em !important;
       }
 
       .brand-section h3 {
-        font-size: 1.15em;
+        font-size: 1.1em;
       }
 
       .filter-item input,
@@ -3024,6 +3213,63 @@
       .team-member-card,
       .solution-item {
         flex: 0 0 100%;
+      }
+
+      /* Mobile dropdown adjustments for extra small screens */
+      .mobile-nav-dropdown-btn {
+        padding: 12px 14px;
+        font-size: 0.9em;
+      }
+
+      .mobile-nav-dropdown-item {
+        padding: 10px 12px;
+        font-size: 0.85em;
+      }
+
+      /* Product cards even smaller */
+      .brand-card,
+      .product-card {
+        padding: 14px 12px;
+        min-height: 180px;
+      }
+
+      .product-card-inner {
+        min-height: 180px;
+      }
+
+      .product-card-front,
+      .product-card-back {
+        min-height: 180px;
+        padding: 14px 12px;
+      }
+
+      .brand-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1em;
+      }
+
+      .brand-info h3 {
+        font-size: 0.95em;
+      }
+
+      /* Modal even tighter */
+      .modal-body {
+        padding: 12px;
+      }
+
+      .modal-section {
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+
+      .modal-section h3 {
+        font-size: 0.95em;
+      }
+
+      .modal-section p,
+      .modal-section ul li {
+        font-size: 0.85em;
       }
     }
   </style>
@@ -3093,6 +3339,17 @@
         <a href="#" class="export-to-slides-link about-export-link" onclick="event.preventDefault(); openExportModal('about');">Export to Slides</a>
       </div>
       
+      <!-- Mobile dropdown navigation - only visible on mobile -->
+      <div class="mobile-nav-dropdown" id="aboutMobileDropdown">
+        <button class="mobile-nav-dropdown-btn" onclick="toggleMobileDropdown('about')">
+          <span id="aboutMobileDropdownLabel">Jump to company...</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div class="mobile-nav-dropdown-menu" id="aboutMobileDropdownMenu">
+          <!-- Will be populated dynamically -->
+        </div>
+      </div>
+
       <div class="about-page-container">
         <!-- Fixed Sidebar - Will be populated from database -->
         <div class="about-sidebar" id="aboutSidebar">
@@ -3291,7 +3548,19 @@
       
       <!-- Resource Library -->
       <div id="libraryTab" class="sub-content active">
-        <h2 class="kb-title" style="margin-bottom: 35px;">Resources</h2>
+        <h2 class="kb-title" style="margin-bottom: 20px;">Resources</h2>
+
+        <!-- Mobile dropdown navigation - only visible on mobile -->
+        <div class="mobile-nav-dropdown" id="resourcesMobileDropdown">
+          <button class="mobile-nav-dropdown-btn" onclick="toggleMobileDropdown('resources')">
+            <span id="resourcesMobileDropdownLabel">Jump to company...</span>
+            <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="mobile-nav-dropdown-menu" id="resourcesMobileDropdownMenu">
+            <!-- Will be populated dynamically -->
+          </div>
+        </div>
+
         <div id="resourcesContent" class="resources-container">
           <!-- Loading spinner will be shown when tab is clicked if data isn't ready -->
         </div>
@@ -4103,6 +4372,132 @@
       });
     }
     
+    // ========================================
+    // MOBILE DROPDOWN NAVIGATION
+    // ========================================
+
+    // Toggle mobile dropdown menu
+    function toggleMobileDropdown(type) {
+      const btn = document.querySelector(`#${type}MobileDropdown .mobile-nav-dropdown-btn`);
+      const menu = document.getElementById(`${type}MobileDropdownMenu`);
+
+      if (!btn || !menu) return;
+
+      btn.classList.toggle('open');
+      menu.classList.toggle('show');
+
+      // Close dropdown when clicking outside
+      if (menu.classList.contains('show')) {
+        setTimeout(() => {
+          document.addEventListener('click', function closeDropdown(e) {
+            if (!e.target.closest(`#${type}MobileDropdown`)) {
+              btn.classList.remove('open');
+              menu.classList.remove('show');
+              document.removeEventListener('click', closeDropdown);
+            }
+          });
+        }, 10);
+      }
+    }
+
+    // Populate About Us mobile dropdown
+    function populateAboutMobileDropdown() {
+      if (!allCompaniesData || !allCompaniesData.length) return;
+
+      const menu = document.getElementById('aboutMobileDropdownMenu');
+      if (!menu) return;
+
+      let menuHtml = '';
+      allCompaniesData.forEach((company, index) => {
+        const activeClass = index === currentCompanyIndex ? 'active' : '';
+        menuHtml += `<button class="mobile-nav-dropdown-item ${activeClass}" onclick="selectMobileCompany('about', ${index})">${company.CompanyName}</button>`;
+      });
+      menu.innerHTML = menuHtml;
+
+      // Update label
+      updateAboutMobileDropdownLabel();
+    }
+
+    // Update About dropdown label
+    function updateAboutMobileDropdownLabel() {
+      const label = document.getElementById('aboutMobileDropdownLabel');
+      if (label && allCompaniesData && allCompaniesData[currentCompanyIndex]) {
+        label.textContent = allCompaniesData[currentCompanyIndex].CompanyName;
+      }
+    }
+
+    // Populate Resources mobile dropdown
+    function populateResourcesMobileDropdown(companiesWithResources) {
+      const menu = document.getElementById('resourcesMobileDropdownMenu');
+      if (!menu) return;
+
+      if (!companiesWithResources || companiesWithResources.length === 0) {
+        menu.innerHTML = '<div style="padding: 12px; color: rgba(107, 114, 128, 0.7); text-align: center;">No companies with resources</div>';
+        return;
+      }
+
+      let menuHtml = '';
+      companiesWithResources.forEach((company, index) => {
+        const encodedCompany = encodeURIComponent(company);
+        menuHtml += `<button class="mobile-nav-dropdown-item" data-company="${encodedCompany}" onclick="selectMobileResourceCompany('${encodedCompany}')">${company}</button>`;
+      });
+      menu.innerHTML = menuHtml;
+
+      // Update label to first company
+      const label = document.getElementById('resourcesMobileDropdownLabel');
+      if (label && companiesWithResources.length > 0) {
+        label.textContent = companiesWithResources[0];
+      }
+    }
+
+    // Select company from About mobile dropdown
+    function selectMobileCompany(type, index) {
+      // Close dropdown
+      const btn = document.querySelector(`#${type}MobileDropdown .mobile-nav-dropdown-btn`);
+      const menu = document.getElementById(`${type}MobileDropdownMenu`);
+      if (btn) btn.classList.remove('open');
+      if (menu) menu.classList.remove('show');
+
+      if (type === 'about') {
+        // Update active states in mobile dropdown
+        menu.querySelectorAll('.mobile-nav-dropdown-item').forEach((item, i) => {
+          item.classList.toggle('active', i === index);
+        });
+
+        // Scroll to company section
+        switchToCompany(index);
+
+        // Scroll to top of content area on mobile
+        const section = document.querySelector(`#aboutContentArea .brand-section`);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+
+    // Select company from Resources mobile dropdown
+    function selectMobileResourceCompany(encodedCompany) {
+      // Close dropdown
+      const btn = document.querySelector('#resourcesMobileDropdown .mobile-nav-dropdown-btn');
+      const menu = document.getElementById('resourcesMobileDropdownMenu');
+      if (btn) btn.classList.remove('open');
+      if (menu) menu.classList.remove('show');
+
+      // Update dropdown label
+      const label = document.getElementById('resourcesMobileDropdownLabel');
+      if (label) {
+        label.textContent = decodeURIComponent(encodedCompany);
+      }
+
+      // Update active state
+      menu.querySelectorAll('.mobile-nav-dropdown-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.company === encodedCompany);
+      });
+
+      // Scroll to company section
+      scrollToResourceCompany(encodedCompany);
+    }
+
     // Navigation
     function showPage(pageName) {
       // Track navigation BEFORE page changes
@@ -4741,13 +5136,16 @@
       
       // Render company navigator with companies with resources first, then without
       renderCompanyNavigator(companiesWithResources, companiesWithoutResources, resourcesByCompany);
-      
+
+      // Populate mobile dropdown
+      populateResourcesMobileDropdown(companiesWithResources);
+
       // Render only companies with resources in the main content
       renderAllCompanyResources(companiesWithResources, resourcesByCompany);
-      
+
       // Setup scroll spy (only for companies with resources)
       setupResourcesScrollSpy();
-      
+
       // Initialize abbreviation tooltips
       refreshAbbreviationTooltips(document.getElementById('resourcesContent'));
     }
@@ -6491,9 +6889,9 @@
     // Helper function to render about page from cached/fresh data
     function renderAboutPage() {
       if (!allCompaniesData || !allCompaniesData.length) return;
-      
+
       currentCompanyIndex = 0;
-      
+
       const sidebar = document.getElementById('aboutSidebar');
       let sidebarHtml = '';
       allCompaniesData.forEach((company, index) => {
@@ -6501,7 +6899,10 @@
         sidebarHtml += `<button class="brand-nav-item ${activeClass}" onclick="switchToCompany(${index})">${company.CompanyName}</button>`;
       });
       sidebar.innerHTML = sidebarHtml;
-      
+
+      // Populate mobile dropdown
+      populateAboutMobileDropdown();
+
       renderCompanyPage(0);
       aboutPageLoaded = true;
     }
@@ -6556,7 +6957,10 @@
           sidebarHtml += `<button class="brand-nav-item ${activeClass}" onclick="switchToCompany(${index})">${company.CompanyName}</button>`;
         });
         sidebar.innerHTML = sidebarHtml;
-        
+
+        // Populate mobile dropdown
+        populateAboutMobileDropdown();
+
         renderCompanyPage(0);
         aboutPageLoaded = true;
         dataReady.about = true;
@@ -6571,23 +6975,33 @@
     // New function to switch between companies
     function switchToCompany(index) {
       if (index < 0 || index >= allCompaniesData.length) return;
-      
+
       const company = allCompaniesData[index];
-      
+
       // Track company view
       if (company) {
-        trackEvent('company_view', { 
+        trackEvent('company_view', {
           companyName: company.CompanyName,
           companyId: company.CompanyID || '',
           page: 'about'
         });
       }
-      
+
       // Update active state in sidebar
       document.querySelectorAll('.brand-nav-item').forEach((item, i) => {
         item.classList.toggle('active', i === index);
       });
-      
+
+      // Update mobile dropdown
+      currentCompanyIndex = index;
+      updateAboutMobileDropdownLabel();
+      const mobileMenu = document.getElementById('aboutMobileDropdownMenu');
+      if (mobileMenu) {
+        mobileMenu.querySelectorAll('.mobile-nav-dropdown-item').forEach((item, i) => {
+          item.classList.toggle('active', i === index);
+        });
+      }
+
       // Add transition effect
       const contentArea = document.getElementById('aboutContentArea');
       contentArea.style.opacity = '0';
