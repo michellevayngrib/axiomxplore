@@ -2335,9 +2335,27 @@
     
     .history-row {
       display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .history-products-wrapper {
+      display: flex;
       align-items: center;
       gap: 20px;
-      margin-bottom: 24px;
+    }
+
+    .history-client-count-row {
+      text-align: center;
+      font-size: 0.85em;
+      font-weight: 600;
+      color: rgba(99, 102, 241, 0.9);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 0 auto;
     }
     
     .history-card {
@@ -3138,9 +3156,9 @@
         scroll-margin-top: 80px;
       }
 
-      /* Cross-sell Finder - compact button layout */
+      /* Cross-sell Finder - compact centered button layout */
       .opportunity-card {
-        padding: 20px 16px !important;
+        padding: 18px 14px !important;
       }
 
       .opportunity-actions {
@@ -3148,72 +3166,91 @@
         flex-wrap: wrap;
         gap: 6px;
         margin-top: 12px !important;
+        justify-content: center;
       }
 
       .opportunity-btn {
-        padding: 8px 12px !important;
+        padding: 7px 10px !important;
         font-size: 0.8em !important;
         border-radius: 8px !important;
         white-space: nowrap;
         flex-shrink: 0;
       }
 
+      .opportunity-btn.demo-dropdown {
+        padding-right: 10px !important;
+      }
+
+      .demo-select {
+        padding-right: 8px !important;
+      }
+
       .nav-tab-submit-lead {
         font-size: 0.8em !important;
-        padding: 8px 12px !important;
+        padding: 7px 10px !important;
         white-space: nowrap;
       }
 
-      /* Cross-sell History - stacked layout with centered text and horizontal client count */
+      /* Cross-sell History - horizontal products with client count below */
       .history-row {
         flex-direction: column !important;
+        align-items: center;
+        gap: 6px !important;
+        margin-bottom: 16px !important;
+      }
+
+      .history-products-wrapper {
+        display: flex !important;
         align-items: stretch;
-        gap: 0 !important;
-        margin-bottom: 20px !important;
+        gap: 8px !important;
+        width: 100%;
       }
 
       .history-card {
-        padding: 14px !important;
-        text-align: center;
+        padding: 12px 10px !important;
+        flex: 1;
+        min-width: 0;
       }
 
       .history-product-content {
         align-items: center !important;
         text-align: center;
+        gap: 6px !important;
       }
 
       .history-product-name {
-        font-size: 0.85em !important;
+        font-size: 0.8em !important;
         word-wrap: break-word;
         overflow-wrap: break-word;
         text-align: center;
+        line-height: 1.3;
       }
 
       .history-arrow-between {
-        flex-direction: row !important;
-        width: 100% !important;
-        min-width: auto;
-        padding: 6px 0 !important;
-        justify-content: center;
-        background: transparent;
+        flex-direction: column !important;
+        width: auto !important;
+        min-width: 30px;
+        padding: 0 4px !important;
+        flex-shrink: 0;
       }
 
       .history-arrow-icons {
-        flex-direction: row !important;
-        transform: rotate(90deg);
+        flex-direction: column !important;
+        gap: 2px !important;
       }
 
-      .history-client-count {
-        font-size: 0.75em !important;
-        writing-mode: horizontal-tb !important;
-        text-orientation: mixed;
-        white-space: nowrap;
-        margin-left: 8px;
+      .history-arrow-icon {
+        font-size: 14px !important;
       }
 
       .history-company {
-        font-size: 0.75em !important;
+        font-size: 0.7em !important;
         justify-content: center;
+      }
+
+      .history-company-logo {
+        max-width: 16px !important;
+        max-height: 16px !important;
       }
 
       .history-product-actions {
@@ -3222,8 +3259,13 @@
       }
 
       .history-detail-btn {
+        font-size: 0.7em !important;
+        padding: 5px 8px !important;
+      }
+
+      .history-client-count-row {
         font-size: 0.75em !important;
-        padding: 6px 10px !important;
+        padding: 4px 12px !important;
       }
 
       /* Contacts - clean mobile layout */
@@ -5093,7 +5135,7 @@
                 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 11px; height: 11px;">
                   <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                 </svg>
-                <span>Copy</span>
+                <span>Copy email</span>
               </button>
             ` : ''}
           </div>
@@ -8295,38 +8337,35 @@
         const row = document.createElement('div');
         row.className = 'history-row';
         row.dataset.index = index;
+        const clientCount = rule.ClientCount || rule.clientCount || 0;
         row.innerHTML = `
-          <div class="history-card">
-            <div class="history-product-content">
-              <div class="history-product-name">${productA.ProductName}</div>
-              <div class="history-company">${logoA}<span>${productA.CompanyName}</span></div>
-              <div class="history-product-actions">
-                <button class="history-detail-btn" onclick="showProductDetails('${productA.ProductID}')">Full Description</button>
+          <div class="history-products-wrapper">
+            <div class="history-card">
+              <div class="history-product-content">
+                <div class="history-product-name">${productA.ProductName}</div>
+                <div class="history-company">${logoA}<span>${productA.CompanyName}</span></div>
+                <div class="history-product-actions">
+                  <button class="history-detail-btn" onclick="showProductDetails('${productA.ProductID}')">Full Description</button>
+                </div>
+              </div>
+            </div>
+            <div class="history-arrow-between">
+              <div class="history-arrow-icons">
+                <div class="history-arrow-icon">←</div>
+                <div class="history-arrow-icon">→</div>
+              </div>
+            </div>
+            <div class="history-card">
+              <div class="history-product-content">
+                <div class="history-product-name">${productB.ProductName}</div>
+                <div class="history-company">${logoB}<span>${productB.CompanyName}</span></div>
+                <div class="history-product-actions">
+                  <button class="history-detail-btn" onclick="showProductDetails('${productB.ProductID}')">Full Description</button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="history-arrow-between">
-            <div class="history-arrow-icons">
-              <div class="history-arrow-icon">←</div>
-              <div class="history-arrow-icon">→</div>
-            </div>
-            ${(() => {
-              const clientCount = rule.ClientCount || rule.clientCount || 0;
-              if (clientCount && clientCount > 0) {
-                return `<div class="history-client-count">${clientCount} client${clientCount !== 1 ? 's' : ''}</div>`;
-              }
-              return '';
-            })()}
-          </div>
-          <div class="history-card">
-            <div class="history-product-content">
-              <div class="history-product-name">${productB.ProductName}</div>
-              <div class="history-company">${logoB}<span>${productB.CompanyName}</span></div>
-              <div class="history-product-actions">
-                <button class="history-detail-btn" onclick="showProductDetails('${productB.ProductID}')">Full Description</button>
-              </div>
-            </div>
-          </div>
+          ${clientCount && clientCount > 0 ? `<div class="history-client-count-row">${clientCount} client${clientCount !== 1 ? 's' : ''}</div>` : ''}
         `;
         list.appendChild(row);
       });
