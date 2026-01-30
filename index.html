@@ -2636,8 +2636,62 @@
     }
     
     @media (max-width: 768px) {
+      /* ========================================
+         MOBILE NAVIGATION - Complete restructure
+         ======================================== */
+      .top-nav {
+        padding: 10px 0;
+      }
+
+      .nav-logo {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 15px;
+        gap: 8px;
+      }
+
+      .nav-logo img {
+        height: 28px !important;
+      }
+
+      .nav-logo-text {
+        font-size: 1em;
+      }
+
+      .nav-container {
+        padding: 10px 15px;
+        width: 100%;
+      }
+
       .nav-tabs {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 5px;
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .nav-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav-tab {
+        padding: 8px 14px;
+        font-size: 0.85em;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-tab-submit-lead {
+        padding: 8px 14px;
+        font-size: 0.85em;
+        flex-shrink: 0;
       }
       
       .brand-content-grid {
@@ -2685,25 +2739,47 @@
       
       .kb-filters {
         grid-template-columns: 1fr;
+        padding: 20px;
       }
-      
+
+      /* ========================================
+         MOBILE KNOWLEDGE BASE HEADER
+         ======================================== */
+      .kb-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .kb-header > div:first-child {
+        width: 100%;
+      }
+
+      .kb-title {
+        font-size: 1.6em;
+        margin-bottom: 5px;
+      }
+
+      .view-toggle {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .view-btn {
+        padding: 10px 16px;
+        font-size: 0.85em;
+        flex: 1;
+        text-align: center;
+      }
+
+      .export-to-slides-link {
+        font-size: 0.85em;
+      }
+
       .history-filters {
         grid-template-columns: 1fr;
       }
-      
-      .product-card {
-        min-height: 280px;
-      }
-      
-      .product-card-inner {
-        min-height: 280px;
-      }
-      
-      .product-card-front,
-      .product-card-back {
-        min-height: 280px;
-      }
-      
+
       .form-grid,
       .situation-grid {
         grid-template-columns: 1fr;
@@ -2730,17 +2806,224 @@
         font-size: 18px;
       }
       
+      /* ========================================
+         MOBILE ABOUT US PAGE - Complete fix
+         ======================================== */
+      .about-page-header {
+        grid-template-rows: auto auto;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .about-page-header h2 {
+        font-size: 1.6em !important;
+      }
+
       .about-page-container {
         grid-template-columns: 1fr;
+        min-height: auto;
+        gap: 15px;
       }
-      
+
       .about-sidebar {
         position: relative;
         top: 0;
+        min-height: auto;
+        max-height: none;
+        padding: 20px 15px;
+        order: 1;
       }
-      
+
+      .about-sidebar h3 {
+        font-size: 1em;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+      }
+
+      .brand-nav-item {
+        padding: 10px 12px;
+        font-size: 0.85em;
+        margin-bottom: 6px;
+      }
+
+      .about-content-area {
+        max-height: none;
+        min-height: auto;
+        overflow-y: visible;
+        padding-right: 0;
+        order: 2;
+      }
+
+      .brand-section {
+        padding: 25px 20px;
+        margin-bottom: 20px;
+      }
+
+      .brand-section h3 {
+        font-size: 1.3em;
+      }
+
+      .brand-info-card {
+        padding: 20px 15px;
+      }
+
       .brand-content-grid {
         grid-template-columns: 1fr;
+      }
+
+      /* ========================================
+         MOBILE RESOURCES PAGE
+         ======================================== */
+      .resources-company-nav {
+        padding: 20px 15px;
+        min-height: auto;
+      }
+
+      .resources-content-panel {
+        padding: 20px 15px;
+      }
+
+      /* ========================================
+         MOBILE HOME PAGE
+         ======================================== */
+      .home-page {
+        padding: 30px 0;
+      }
+
+      .home-title {
+        font-size: 1.8em;
+      }
+
+      .home-subtitle {
+        font-size: 1em;
+      }
+
+      .journey-grid {
+        gap: 15px;
+      }
+
+      .journey-card {
+        padding: 25px 20px;
+      }
+
+      /* ========================================
+         MOBILE GENERAL IMPROVEMENTS
+         ======================================== */
+      .main-content {
+        padding: 20px 15px;
+      }
+
+      .page-section h2 {
+        font-size: 1.6em;
+      }
+
+      /* Better touch targets */
+      button, .nav-tab, .brand-nav-item, .view-btn, .size-btn {
+        min-height: 44px;
+      }
+
+      /* Card improvements */
+      .product-card {
+        min-height: 260px;
+      }
+
+      .product-card-inner {
+        min-height: 260px;
+      }
+
+      .product-card-front,
+      .product-card-back {
+        min-height: 260px;
+        padding: 20px 15px;
+      }
+
+      /* Cross-sell page improvements */
+      .crosssell-header h2 {
+        font-size: 1.6em;
+      }
+
+      /* Submit page improvements */
+      .submit-header h2 {
+        font-size: 1.6em;
+      }
+
+      .form-card {
+        padding: 25px 20px;
+      }
+
+      /* Team member carousel on About page */
+      .team-member-card,
+      .solution-item {
+        flex: 0 0 calc(100% - 20px);
+        min-width: 250px;
+      }
+
+      /* Modal improvements */
+      .modal-content {
+        width: 95%;
+        max-width: 95%;
+        margin: 10px;
+        padding: 20px;
+      }
+    }
+
+    /* ========================================
+       EXTRA SMALL SCREENS (< 480px)
+       ======================================== */
+    @media (max-width: 480px) {
+      .nav-logo-text {
+        font-size: 0.9em;
+      }
+
+      .nav-tab {
+        padding: 8px 10px;
+        font-size: 0.8em;
+      }
+
+      .nav-tab-submit-lead {
+        padding: 8px 10px;
+        font-size: 0.8em;
+      }
+
+      .kb-title {
+        font-size: 1.4em;
+      }
+
+      .view-btn {
+        padding: 8px 12px;
+        font-size: 0.8em;
+      }
+
+      .home-title {
+        font-size: 1.5em;
+      }
+
+      .about-page-header h2 {
+        font-size: 1.4em !important;
+      }
+
+      .brand-section {
+        padding: 20px 15px;
+      }
+
+      .brand-section h3 {
+        font-size: 1.15em;
+      }
+
+      .filter-item input,
+      .filter-item select {
+        padding: 10px 12px;
+        font-size: 0.85em;
+      }
+
+      .size-btn {
+        padding: 10px 8px;
+        font-size: 0.85em;
+      }
+
+      .team-member-card,
+      .solution-item {
+        flex: 0 0 100%;
       }
     }
   </style>
