@@ -293,6 +293,8 @@
 
     .about-page-header .about-export-link {
       align-self: center;
+      justify-self: start;
+      width: fit-content;
     }
 
     .about-page-container {
@@ -2824,6 +2826,11 @@
         font-size: 1.6em !important;
       }
 
+      .about-page-header .about-export-link {
+        justify-self: start;
+        width: fit-content;
+      }
+
       .about-page-container {
         display: block;
         min-height: auto;
@@ -3131,62 +3138,87 @@
         scroll-margin-top: 80px;
       }
 
-      /* Cross-sell Finder - 2 column button layout */
+      /* Cross-sell Finder - compact button layout */
+      .opportunity-card {
+        padding: 20px 16px !important;
+      }
+
       .opportunity-actions {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px !important;
       }
 
       .opportunity-btn {
-        padding: 10px 12px !important;
+        padding: 8px 12px !important;
         font-size: 0.8em !important;
-        justify-content: center;
-        text-align: center;
+        border-radius: 8px !important;
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
       .nav-tab-submit-lead {
         font-size: 0.8em !important;
-        padding: 10px 12px !important;
+        padding: 8px 12px !important;
+        white-space: nowrap;
       }
 
-      /* Cross-sell History - keep products on one row */
+      /* Cross-sell History - stacked layout with centered text and horizontal client count */
       .history-row {
-        flex-direction: row !important;
+        flex-direction: column !important;
         align-items: stretch;
-        gap: 10px;
+        gap: 0 !important;
+        margin-bottom: 20px !important;
       }
 
       .history-card {
-        padding: 15px !important;
+        padding: 14px !important;
+        text-align: center;
+      }
+
+      .history-product-content {
+        align-items: center !important;
+        text-align: center;
       }
 
       .history-product-name {
         font-size: 0.85em !important;
         word-wrap: break-word;
         overflow-wrap: break-word;
+        text-align: center;
       }
 
       .history-arrow-between {
-        flex-direction: column !important;
-        width: auto !important;
-        min-width: 40px;
-        padding: 0 5px !important;
+        flex-direction: row !important;
+        width: 100% !important;
+        min-width: auto;
+        padding: 6px 0 !important;
+        justify-content: center;
+        background: transparent;
       }
 
       .history-arrow-icons {
-        flex-direction: column !important;
+        flex-direction: row !important;
+        transform: rotate(90deg);
       }
 
       .history-client-count {
         font-size: 0.75em !important;
-        writing-mode: vertical-rl;
+        writing-mode: horizontal-tb !important;
         text-orientation: mixed;
         white-space: nowrap;
+        margin-left: 8px;
       }
 
       .history-company {
         font-size: 0.75em !important;
+        justify-content: center;
+      }
+
+      .history-product-actions {
+        display: flex;
+        justify-content: center;
       }
 
       .history-detail-btn {
@@ -3194,38 +3226,9 @@
         padding: 6px 10px !important;
       }
 
-      /* Contacts - improved mobile layout */
-      .contact-row-mobile {
-        display: grid !important;
-        grid-template-columns: 1fr auto;
-        grid-template-rows: auto auto;
-        gap: 4px 12px;
-        padding: 16px !important;
-      }
-
-      .contact-name-mobile {
-        font-size: 0.95em !important;
-        grid-column: 1;
-        grid-row: 1;
-      }
-
-      .contact-role-mobile {
-        font-size: 0.85em !important;
-        grid-column: 2;
-        grid-row: 1;
-        text-align: right;
-      }
-
-      .contact-email-mobile {
-        grid-column: 1;
-        grid-row: 2;
-      }
-
-      .contact-company-mobile {
-        font-size: 0.85em !important;
-        grid-column: 2;
-        grid-row: 2;
-        text-align: right;
+      /* Contacts - clean mobile layout */
+      #contactsList {
+        gap: 12px !important;
       }
 
       /* Knowledge Base modal - centered buttons layout */
@@ -5076,25 +5079,27 @@
       const productChips = products ? products.split(',').slice(0, 2).map(p => `<span class="industry-chip" style="margin-right: 6px; font-size: 0.75em;">${p.trim()}</span>`).join('') : '';
 
       if (isMobile) {
-        // Mobile layout: Name (left) - Role (right), Copy email (left) - Company (right)
-        row.style.cssText = 'background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 12px; padding: 14px 16px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6); display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto auto; gap: 4px 12px; transition: all 0.3s ease;';
+        // Mobile layout: Clean vertical stacked design
+        row.style.cssText = 'background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 14px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6); display: flex; flex-direction: column; gap: 8px; transition: all 0.3s ease;';
 
         row.innerHTML = `
-          <h4 style="font-size: 0.9em; font-weight: 600; color: rgba(31, 41, 55, 0.9); margin: 0; grid-column: 1; grid-row: 1;">${name}</h4>
-          ${title ? `<p style="font-size: 0.85em; color: rgba(107, 114, 128, 0.8); margin: 0; text-align: right; grid-column: 2; grid-row: 1;">${title}</p>` : '<span style="grid-column: 2; grid-row: 1;"></span>'}
-          <div style="grid-column: 1; grid-row: 2; display: flex; align-items: center;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="flex: 1;">
+              <h4 style="font-size: 0.95em; font-weight: 600; color: rgba(31, 41, 55, 0.9); margin: 0 0 2px 0;">${name}</h4>
+              ${company ? `<span style="font-size: 0.8em; color: rgba(99, 102, 241, 0.8); font-weight: 500;">${company}</span>` : ''}
+            </div>
             ${email ? `
-              <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})" style="font-size: 0.75em; padding: 2px 6px; margin: 0;">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 10px; height: 10px;">
+              <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})" style="font-size: 0.75em; padding: 4px 10px; margin: 0; flex-shrink: 0;">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 11px; height: 11px;">
                   <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                 </svg>
-                <span>Copy email</span>
+                <span>Copy</span>
               </button>
             ` : ''}
           </div>
-          ${company ? `<span style="font-size: 0.85em; color: rgba(107, 114, 128, 0.8); font-weight: 500; text-align: right; grid-column: 2; grid-row: 2;">${company}</span>` : '<span style="grid-column: 2; grid-row: 2;"></span>'}
+          ${title ? `<p style="font-size: 0.85em; color: rgba(107, 114, 128, 0.85); margin: 0; line-height: 1.4;">${title}</p>` : ''}
           ${(specialityBadge || productChips) ? `
-            <div style="grid-column: 1 / -1; grid-row: 3; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px;">
               ${specialityBadge}
               ${productChips}
             </div>
@@ -7092,7 +7097,12 @@
       // Populate mobile dropdown
       populateAboutMobileDropdown();
 
-      renderCompanyPage(0);
+      // Check if mobile and render all companies, otherwise render single page
+      if (window.innerWidth <= 768) {
+        renderAllCompaniesForMobile();
+      } else {
+        renderCompanyPage(0);
+      }
       aboutPageLoaded = true;
     }
     
