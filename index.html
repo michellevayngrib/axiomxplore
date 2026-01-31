@@ -2700,23 +2700,36 @@
 
       .nav-tabs {
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 4px 6px;
         padding: 5px 0;
         width: 100%;
         justify-content: center;
       }
 
       .nav-tab {
-        padding: 8px 12px;
-        font-size: 0.8em;
+        padding: 6px 10px;
+        font-size: 0.75em;
         white-space: nowrap;
         flex-shrink: 0;
       }
 
       .nav-tab-submit-lead {
+        padding: 6px 10px;
+        font-size: 0.7em;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+
+      /* Sub-tabs - fit on one line */
+      .sub-tabs {
+        gap: 6px;
+        margin-bottom: 20px;
+      }
+
+      .sub-tab {
         padding: 8px 12px;
         font-size: 0.8em;
-        flex-shrink: 0;
+        white-space: nowrap;
       }
       
       .brand-content-grid {
@@ -3012,12 +3025,40 @@
         margin-bottom: 30px;
       }
 
+      /* Home page buttons - 2x2 grid, smaller */
       .journey-grid {
-        gap: 15px;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
       }
 
       .journey-card {
-        padding: 25px 20px;
+        padding: 14px 12px;
+        min-height: auto;
+      }
+
+      .journey-card .journey-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 8px;
+      }
+
+      .journey-card .journey-icon i {
+        font-size: 1.1em;
+      }
+
+      .journey-card .journey-title {
+        font-size: 0.85em;
+        margin-bottom: 4px;
+      }
+
+      .journey-card .journey-description {
+        font-size: 0.7em;
+        line-height: 1.3;
+      }
+
+      /* Wizard labels - smaller text */
+      .wizard-section .form-group > label {
+        font-size: 0.85em !important;
       }
 
       /* ========================================
@@ -3191,6 +3232,21 @@
         white-space: nowrap;
       }
 
+      /* Results header - fit on one line */
+      .results-header h3 {
+        font-size: 1.1em !important;
+        white-space: nowrap;
+      }
+
+      /* Why This Recommendation - fit on one line */
+      .opportunity-card [onclick*="toggleRecommendationDetails"] > span {
+        font-size: 0.9em !important;
+        white-space: nowrap;
+        display: inline-flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center;
+      }
+
       /* Cross-sell History - horizontal products with client count below */
       .history-row {
         flex-direction: column !important;
@@ -3273,16 +3329,18 @@
         gap: 12px !important;
       }
 
-      /* Knowledge Base modal - centered buttons layout */
+      /* Knowledge Base modal - buttons on one line */
       .modal-badges {
         justify-content: center !important;
-        gap: 8px !important;
+        gap: 6px !important;
+        flex-wrap: nowrap !important;
       }
 
       .modal-badges .opportunity-btn,
       .modal-badges a.opportunity-btn {
-        padding: 8px 14px !important;
-        font-size: 0.8em !important;
+        padding: 6px 10px !important;
+        font-size: 0.75em !important;
+        white-space: nowrap;
       }
 
       .modal-jump-container {
@@ -3361,12 +3419,17 @@
       }
 
       .nav-tab {
-        padding: 6px 8px;
-        font-size: 0.75em;
+        padding: 5px 7px;
+        font-size: 0.7em;
       }
 
       .nav-tab-submit-lead {
-        padding: 6px 8px;
+        padding: 5px 7px;
+        font-size: 0.65em;
+      }
+
+      .sub-tab {
+        padding: 6px 10px;
         font-size: 0.75em;
       }
 
