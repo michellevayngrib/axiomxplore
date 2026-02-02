@@ -3185,7 +3185,7 @@
       .modal-badges a.opportunity-btn {
         white-space: nowrap;
         font-size: 0.75em !important;
-        padding: 4px 8px !important;
+        padding: 6px 10px !important;
       }
 
       /* Submit page improvements */
@@ -3229,8 +3229,6 @@
       .team-member-card .team-member-email-btn {
         font-size: 0.65em !important;
         padding: 2px 6px !important;
-        margin-top: auto !important;
-        align-self: center !important;
       }
 
       /* Touch-responsive carousels */
@@ -7411,7 +7409,7 @@
       // Multiple demos - select dropdown
       return `
         <select class="opportunity-btn demo-select" onchange="if(this.value) window.open(this.value, '_blank'); this.value='';" style="text-align: left; cursor: pointer;">
-          <option value="">View Demos ▾</option>
+          <option value="">View Demos (${demos.length}) ▾</option>
           ${demos.map(d => `<option value="${d.url}">${d.label}</option>`).join('')}
         </select>
       `;
