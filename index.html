@@ -3230,7 +3230,10 @@
         font-size: 0.65em !important;
         padding: 2px 6px !important;
         margin-top: auto !important;
-        align-self: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex !important;
+        justify-content: center !important;
       }
 
       /* Touch-responsive carousels */
@@ -3333,13 +3336,18 @@
 
       .demo-select {
         padding: 4px 8px !important;
-        font-size: 0.7em !important;
+        font-size: 0.75em !important;
         width: auto !important;
-        max-width: none;
-        min-width: 0;
+        max-width: fit-content !important;
+        min-width: 0 !important;
         flex: 0 0 auto !important;
         margin: 0;
         white-space: nowrap;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-image: none !important;
+        padding-right: 8px !important;
       }
 
       .nav-tab-submit-lead {
