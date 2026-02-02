@@ -2680,30 +2680,34 @@
       }
 
       .nav-container {
-        padding: 5px 15px;
+        padding: 4px 10px;
         width: 100%;
       }
 
       .nav-tabs {
         flex-wrap: wrap;
-        gap: 6px;
-        padding: 5px 0;
+        gap: 3px;
+        padding: 3px 0;
         width: 100%;
         justify-content: center;
       }
 
       .nav-tab {
-        padding: 6px 10px;
-        font-size: 0.75em;
+        padding: 5px 6px;
+        font-size: 0.65em;
         white-space: nowrap;
         flex-shrink: 0;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
       }
 
       .nav-tab-submit-lead {
-        padding: 6px 8px;
+        padding: 5px 6px;
         font-size: 0.65em;
         flex-shrink: 0;
         white-space: nowrap;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
       }
 
       /* Sub-tabs - fit on single row */
@@ -3009,16 +3013,34 @@
       }
 
       .home-subtitle {
-        font-size: 1em;
-        margin-bottom: 30px;
+        font-size: 0.9em;
+        margin-bottom: 22px;
+        white-space: nowrap;
       }
 
       .journey-grid {
-        gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
       }
 
       .journey-card {
-        padding: 25px 20px;
+        padding: 18px 14px;
+        min-height: 180px;
+      }
+
+      .journey-icon {
+        font-size: 3em;
+        margin-bottom: 14px;
+        height: 56px;
+      }
+
+      .journey-title {
+        font-size: 1.05em;
+        margin-bottom: 6px;
+      }
+
+      .journey-description {
+        font-size: 0.85em;
       }
 
       /* ========================================
@@ -3106,8 +3128,8 @@
       }
 
       /* "Top X cross-sell opportunities" - fit on one line */
-      #crosssellResults h3 {
-        font-size: 1em !important;
+      .results-header h3 {
+        font-size: 0.9em !important;
         white-space: nowrap;
       }
 
@@ -3116,12 +3138,16 @@
         white-space: nowrap;
         display: inline-flex !important;
         align-items: center;
-        font-size: 0.85em !important;
+        font-size: 0.75em !important;
       }
 
       .recommendation-toggle span {
         display: inline-flex !important;
         margin-left: 4px !important;
+      }
+
+      .recommendation-source {
+        white-space: nowrap;
       }
 
       /* Industry selector prompt - fit on one line */
@@ -3150,7 +3176,7 @@
       /* Team member carousel on About page - show 2+ items on mobile */
       .team-member-card,
       .solution-item {
-        flex: 0 0 calc(45% - 6px);
+        flex: 0 0 calc(48% - 6px);
         min-width: 120px;
         padding: 10px 4px !important;
         height: auto !important;
@@ -3195,12 +3221,26 @@
       /* Carousel container padding reduced for mobile */
       .team-carousel-container,
       .solutions-carousel-container {
-        padding: 0 5px;
+        padding: 0 12px;
       }
 
-      /* Hide carousel nav buttons on mobile - use touch scroll */
+      .carousel-pagination {
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      .carousel-dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      .carousel-dot.active {
+        width: 16px;
+      }
+
+      /* Show carousel nav buttons on mobile */
       .carousel-nav-btn {
-        display: none;
+        display: flex;
       }
 
       /* About Us page - show all companies stacked on mobile */
@@ -3217,6 +3257,16 @@
       /* Cross-sell Finder - compact button layout */
       .opportunity-card {
         padding: 20px 16px !important;
+        font-size: 0.85em;
+      }
+
+      #navigatorResults .opportunity-card h4 {
+        font-size: 1.1em !important;
+      }
+
+      #navigatorResults .opportunity-card p,
+      #navigatorResults .opportunity-card li {
+        font-size: 0.85em !important;
       }
 
       .opportunity-actions {
@@ -3235,10 +3285,33 @@
         flex-shrink: 0;
       }
 
-      .nav-tab-submit-lead {
+      .opportunity-pill {
+        font-size: 0.8em !important;
+        line-height: 1.4;
+      }
+
+      .demo-select {
+        padding: 6px 8px !important;
         font-size: 0.7em !important;
-        padding: 6px 10px !important;
+        width: auto;
+        max-width: 130px;
+        min-width: 0;
+        flex: 0 0 auto;
+        margin: 0;
         white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .nav-tab-submit-lead {
+        font-size: 0.65em !important;
+        padding: 5px 6px !important;
+        white-space: nowrap;
+      }
+
+      .opportunity-actions .nav-tab-submit-lead {
+        font-size: 0.75em !important;
+        padding: 6px 10px !important;
       }
 
       /* Cross-sell History - force horizontal row layout */
@@ -3286,6 +3359,8 @@
         text-align: center;
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        gap: 4px;
         width: 100%;
       }
 
@@ -3340,6 +3415,7 @@
       .history-product-actions {
         display: flex;
         justify-content: center;
+        margin-top: 2px;
       }
 
       .history-detail-btn {
@@ -3463,13 +3539,15 @@
       }
 
       .nav-tab {
-        padding: 6px 8px;
-        font-size: 0.75em;
+        padding: 5px 6px;
+        font-size: 0.65em;
+        letter-spacing: -0.01em;
       }
 
       .nav-tab-submit-lead {
-        padding: 6px 8px;
-        font-size: 0.75em;
+        padding: 5px 6px;
+        font-size: 0.65em;
+        letter-spacing: -0.01em;
       }
 
       /* Standardize ALL section titles on extra small screens */
@@ -3489,6 +3567,35 @@
 
       .home-title {
         font-size: 1.5em;
+      }
+
+      .home-subtitle {
+        font-size: 0.85em;
+        white-space: nowrap;
+      }
+
+      .journey-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .journey-card {
+        padding: 16px 12px;
+        min-height: 160px;
+      }
+
+      .journey-icon {
+        font-size: 2.8em;
+        margin-bottom: 12px;
+        height: 52px;
+      }
+
+      .journey-title {
+        font-size: 0.98em;
+      }
+
+      .journey-description {
+        font-size: 0.8em;
       }
 
       .brand-section {
@@ -3516,7 +3623,7 @@
 
       .team-member-card,
       .solution-item {
-        flex: 0 0 100%;
+        flex: 0 0 calc(48% - 6px);
       }
 
       /* Mobile dropdown adjustments for extra small screens */
@@ -7557,11 +7664,14 @@
     function renderAllCompaniesForMobile() {
       const aboutContent = document.getElementById('aboutContentArea');
       let html = '<div class="about-mobile-all-companies">';
+      const cardsPerPage = window.innerWidth <= 768 ? 2 : 3;
 
       allCompaniesData.forEach((company, index) => {
         const companyId = company.CompanyID || '';
         const teamMembers = allTeamsData[companyId] || [];
         const companyProducts = allProductsData.filter(p => p.CompanyName === company.CompanyName);
+        const teamPages = Math.ceil(teamMembers.length / cardsPerPage);
+        const solutionPages = Math.ceil(companyProducts.length / cardsPerPage);
 
         html += `
           <div class="about-mobile-company-section" id="company-section-${index}">
@@ -7588,7 +7698,10 @@
               ${teamMembers.length > 0 ? `
                 <div class="company-section-divider">
                   <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Meet the Team</h3>
-                  <div class="team-carousel-container" style="padding: 0 10px;">
+                  <div class="team-carousel-container" style="padding: 0 12px;">
+                    <button class="carousel-nav-btn prev" onclick="navigateCarousel('team-mobile-${index}', -1)" aria-label="Previous team members">
+                      ‹
+                    </button>
                     <div class="team-carousel-wrapper">
                       <div class="team-carousel" id="team-carousel-mobile-${index}">
                         ${teamMembers.map((member, memberIndex) => `
@@ -7609,6 +7722,16 @@
                         `).join('')}
                       </div>
                     </div>
+                    <button class="carousel-nav-btn next" onclick="navigateCarousel('team-mobile-${index}', 1)" aria-label="Next team members">
+                      ›
+                    </button>
+                    ${teamPages > 1 ? `
+                      <div class="carousel-pagination" id="team-pagination-mobile-${index}">
+                        ${Array.from({ length: teamPages }, (_, i) => `
+                          <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('team-mobile-${index}', ${i})" aria-label="Go to page ${i + 1}"></button>
+                        `).join('')}
+                      </div>
+                    ` : ''}
                   </div>
                 </div>
               ` : ''}
@@ -7617,7 +7740,10 @@
               ${company.CompanyName !== 'Axiom GRC' && companyProducts.length > 0 ? `
                 <div class="company-section-divider">
                   <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Our Solutions</h3>
-                  <div class="solutions-carousel-container" style="padding: 0 10px;">
+                  <div class="solutions-carousel-container" style="padding: 0 12px;">
+                    <button class="carousel-nav-btn prev" onclick="navigateCarousel('solutions-mobile-${index}', -1)" aria-label="Previous solutions">
+                      ‹
+                    </button>
                     <div class="solutions-carousel-wrapper">
                       <div class="solutions-carousel" id="solutions-carousel-mobile-${index}">
                         ${companyProducts.map(product => `
@@ -7629,6 +7755,16 @@
                         `).join('')}
                       </div>
                     </div>
+                    <button class="carousel-nav-btn next" onclick="navigateCarousel('solutions-mobile-${index}', 1)" aria-label="Next solutions">
+                      ›
+                    </button>
+                    ${solutionPages > 1 ? `
+                      <div class="carousel-pagination" id="solutions-pagination-mobile-${index}">
+                        ${Array.from({ length: solutionPages }, (_, i) => `
+                          <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('solutions-mobile-${index}', ${i})" aria-label="Go to page ${i + 1}"></button>
+                        `).join('')}
+                      </div>
+                    ` : ''}
                   </div>
                 </div>
                 <p style="text-align: center; margin-top: 16px; font-size: 0.9em;">
@@ -7644,6 +7780,18 @@
 
       html += '</div>';
       aboutContent.innerHTML = html;
+
+      allCompaniesData.forEach((company, index) => {
+        const companyId = company.CompanyID || '';
+        const teamMembers = allTeamsData[companyId] || [];
+        const companyProducts = allProductsData.filter(p => p.CompanyName === company.CompanyName);
+        if (teamMembers.length > 0) {
+          initializeCarousel(`team-carousel-mobile-${index}`, teamMembers.length);
+        }
+        if (company.CompanyName !== 'Axiom GRC' && companyProducts.length > 0) {
+          initializeCarousel(`solutions-carousel-mobile-${index}`, companyProducts.length);
+        }
+      });
     }
 
     // Function to scroll to a company section in mobile view
@@ -7689,13 +7837,15 @@
         console.error(`[Carousel Error] Carousel element not found: ${carouselId}`);
         return;
       }
-      
-      const pages = Math.ceil(itemCount / 3);
+
+      const cardsPerPage = window.innerWidth <= 768 ? 2 : 3;
+      const pages = Math.ceil(itemCount / cardsPerPage);
       console.log(`[Carousel Debug] Calculated pages: ${pages} for ${itemCount} items`);
       carouselStates[carouselId] = {
         currentPage: 0,
         totalPages: pages,
-        itemCount: itemCount
+        itemCount: itemCount,
+        cardsPerPage: cardsPerPage
       };
       
       updateCarouselUI(carouselId);
@@ -7767,9 +7917,13 @@
       }
       
       const wrapperWidth = wrapper.offsetWidth;
-      const cardWidth = (wrapperWidth - 24) / 3; // 40px for 2 gaps (20px each)
-      const cardWidthWithGap = cardWidth + 12; // 20px gap
-      const translateX = -(state.currentPage * cardWidthWithGap * 3);
+      const cardsPerPage = state.cardsPerPage || 3;
+      const computedStyle = window.getComputedStyle(carousel);
+      const gap = parseFloat(computedStyle.gap || computedStyle.columnGap || 0);
+      const firstCard = carousel.children[0];
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : (wrapperWidth - gap * (cardsPerPage - 1)) / cardsPerPage;
+      const cardWidthWithGap = cardWidth + gap;
+      const translateX = -(state.currentPage * cardWidthWithGap * cardsPerPage);
       
       console.log(`[Carousel Debug] Updating position - Page: ${state.currentPage}, TranslateX: ${translateX}px, WrapperWidth: ${wrapperWidth}px`);
       carousel.style.transform = `translateX(${translateX}px)`;
@@ -8255,7 +8409,7 @@
               
               return `<div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
                 ${pillTags.map(pill => `
-                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(99, 102, 241, 0.08); border-radius: 8px; color: rgba(55, 65, 81, 0.8); font-family: 'Inter', sans-serif; font-size: 1em; line-height: 1.7; font-style: normal; cursor: default;">
+                  <span class="opportunity-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(99, 102, 241, 0.08); border-radius: 8px; color: rgba(55, 65, 81, 0.8); font-family: 'Inter', sans-serif; font-size: 1em; line-height: 1.7; font-style: normal; cursor: default;">
                     <i class="ph ${pill.icon}" style="font-size: 1em; color: rgba(99, 102, 241, 0.7); display: inline-block; vertical-align: middle;"></i>
                     <span>${pill.text}</span>
                   </span>
@@ -8269,8 +8423,8 @@
                   onclick="toggleRecommendationDetails('rec-details-${index}')"
                   style="cursor: pointer; padding: 8px 0; margin-bottom: 8px;"
                 >
-                  <span style="color: rgba(55, 65, 81, 0.8); line-height: 1.7; font-size: 1em;">
-                    <strong>Why This Recommendation?</strong>${opp.insightsSource ? ` <span style="color: rgba(107, 114, 128, 0.7); font-weight: normal;">(${opp.insightsSource})</span>` : ''} <span id="rec-toggle-${index}" style="display: inline-flex; align-items: center; margin-left: 6px; transition: transform 0.2s ease; transform: rotate(0deg); vertical-align: middle;">
+                  <span class="recommendation-toggle" style="color: rgba(55, 65, 81, 0.8); line-height: 1.7; font-size: 1em;">
+                    <strong>Why This Recommendation?</strong>${opp.insightsSource ? ` <span class="recommendation-source" style="color: rgba(107, 114, 128, 0.7); font-weight: normal;">(${opp.insightsSource})</span>` : ''} <span id="rec-toggle-${index}" style="display: inline-flex; align-items: center; margin-left: 6px; transition: transform 0.2s ease; transform: rotate(0deg); vertical-align: middle;">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: rgba(107, 114, 128, 0.6);">
                       <path d="M4.5 2.5L7.5 5.5L4.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
