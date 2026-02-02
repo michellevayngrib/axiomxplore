@@ -656,17 +656,17 @@
     .solution-item {
       background: rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(10px);
-      border-radius: 8px;
-      padding: 10px 8px;
+      border-radius: 10px;
+      padding: 14px 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: 1px solid rgba(255, 255, 255, 0.3);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      flex: 0 0 calc(25% - 9px);
+      flex: 0 0 calc(33.333% - 8px);
       min-width: 0;
-      gap: 6px;
-      min-height: 80px;
+      gap: 8px;
+      min-height: 100px;
     }
     
     .solution-item:hover {
@@ -1619,14 +1619,12 @@
       -webkit-backdrop-filter: blur(30px);
       border-radius: 24px;
       max-width: 800px;
-      max-height: 85vh;
+      max-height: 90vh;
       width: 90%;
       overflow: hidden;
       box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
       animation: slideUp 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.6);
-      display: flex;
-      flex-direction: column;
     }
     
     @keyframes slideUp {
@@ -1645,7 +1643,6 @@
       gap: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 20px 20px 0 0;
-      flex-shrink: 0;
     }
     
     .modal-icon {
@@ -1701,9 +1698,8 @@
     
     .modal-body {
       padding: 30px;
-      flex: 1;
       overflow-y: auto;
-      min-height: 0;
+      max-height: calc(90vh - 220px);
     }
     
     .modal-badges {
@@ -2255,10 +2251,9 @@
     .modal-actions {
       display: flex;
       gap: 12px;
-      padding: 20px 30px;
+      padding: 24px 30px;
       border-top: 1px solid rgba(229, 231, 235, 0.5);
       background: rgba(249, 250, 251, 0.4);
-      flex-shrink: 0;
     }
     
     /*  Cross-Sell History - Toolbar and filters */
@@ -2341,8 +2336,7 @@
     .history-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 20px;
     }
     
     .history-card {
@@ -2544,8 +2538,7 @@
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      padding-right: 24px;
-      padding-left: 24px;
+      padding-right: 12px;
     }
     
     .demo-select:hover {
@@ -3103,11 +3096,38 @@
         padding: 25px 20px;
       }
 
-      /* Team member carousel on About page - show 2 items on mobile */
-      .team-member-card,
+      /* Team member carousel on About page - show 2.5 items on mobile (smaller cards) */
+      .team-member-card {
+        flex: 0 0 calc(40% - 8px);
+        min-width: 100px;
+        padding: 10px 4px !important;
+        height: 80px !important;
+        gap: 0 !important;
+      }
+
       .solution-item {
-        flex: 0 0 calc(50% - 10px);
-        min-width: 140px;
+        flex: 0 0 calc(40% - 8px);
+        min-width: 100px;
+        padding: 8px 6px !important;
+        min-height: 70px !important;
+        gap: 4px !important;
+      }
+
+      .team-member-name {
+        font-size: 0.7em !important;
+      }
+
+      .team-member-title {
+        font-size: 0.65em !important;
+      }
+
+      .solution-name {
+        font-size: 0.75em !important;
+      }
+
+      .solution-link-btn {
+        padding: 4px 8px !important;
+        font-size: 0.7em !important;
       }
 
       /* Touch-responsive carousels */
@@ -3172,17 +3192,20 @@
         white-space: nowrap;
       }
 
-      /* Cross-sell History - stacked layout with centered text and horizontal client count */
+      /* Cross-sell History - horizontal layout with products on one row */
       .history-row {
-        flex-direction: column !important;
+        flex-direction: row !important;
         align-items: stretch;
-        gap: 0 !important;
-        margin-bottom: 20px !important;
+        gap: 8px !important;
+        margin-bottom: 16px !important;
+        flex-wrap: nowrap;
       }
 
       .history-card {
-        padding: 14px !important;
+        padding: 10px 8px !important;
         text-align: center;
+        flex: 1;
+        min-width: 0;
       }
 
       .history-product-content {
@@ -3191,36 +3214,46 @@
       }
 
       .history-product-name {
-        font-size: 0.85em !important;
+        font-size: 0.75em !important;
         word-wrap: break-word;
         overflow-wrap: break-word;
         text-align: center;
+        line-height: 1.2;
       }
 
       .history-arrow-between {
-        flex-direction: row !important;
-        width: 100% !important;
-        min-width: auto;
-        padding: 6px 0 !important;
+        flex-direction: column !important;
+        width: auto !important;
+        min-width: 50px;
+        padding: 4px !important;
         justify-content: center;
+        align-items: center;
         background: transparent;
+        flex-shrink: 0;
       }
 
       .history-arrow-icons {
         flex-direction: row !important;
-        transform: rotate(90deg);
+        transform: none;
+        gap: 2px;
+      }
+
+      .history-arrow-icons i {
+        font-size: 0.9em !important;
       }
 
       .history-client-count {
-        font-size: 0.75em !important;
+        font-size: 0.65em !important;
         writing-mode: horizontal-tb !important;
         text-orientation: mixed;
         white-space: nowrap;
-        margin-left: 8px;
+        margin-left: 0;
+        margin-top: 2px;
+        text-align: center;
       }
 
       .history-company {
-        font-size: 0.75em !important;
+        font-size: 0.65em !important;
         justify-content: center;
       }
 
@@ -3230,8 +3263,18 @@
       }
 
       .history-detail-btn {
-        font-size: 0.75em !important;
-        padding: 6px 10px !important;
+        font-size: 0.7em !important;
+        padding: 4px 8px !important;
+      }
+
+      /* Cross-sell Opportunities - center buttons and fix demo select */
+      .opportunity-actions {
+        justify-content: center !important;
+      }
+
+      .demo-select {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
       }
 
       /* Contacts - clean mobile layout */
@@ -4645,11 +4688,8 @@
           item.classList.toggle('active', i === index);
         });
 
-        // Scroll to company section
-        switchToCompany(index);
-
-        // Scroll to top of content area on mobile
-        const section = document.querySelector(`#aboutContentArea .brand-section`);
+        // On mobile, scroll directly to the company section (all companies are already rendered)
+        const section = document.getElementById(`company-section-${index}`);
         if (section) {
           section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -7366,8 +7406,11 @@
         initializeCarousel(`solutions-carousel-${index}`, companyProducts.length);
       }
       
-      // Scroll to top immediately (no smooth behavior to ensure it works)
-      aboutContent.scrollTop = 0;
+      // Scroll to top
+      aboutContent.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
 
     // Function to render all companies for mobile view (scrollable)
@@ -7584,9 +7627,9 @@
       }
       
       const wrapperWidth = wrapper.offsetWidth;
-      const cardWidth = (wrapperWidth - 36) / 4; // 36px for 3 gaps (12px each)
+      const cardWidth = (wrapperWidth - 24) / 3; // 24px for 2 gaps (12px each)
       const cardWidthWithGap = cardWidth + 12; // 12px gap
-      const translateX = -(state.currentPage * cardWidthWithGap * 4);
+      const translateX = -(state.currentPage * cardWidthWithGap * 3);
       
       console.log(`[Carousel Debug] Updating position - Page: ${state.currentPage}, TranslateX: ${translateX}px, WrapperWidth: ${wrapperWidth}px`);
       carousel.style.transform = `translateX(${translateX}px)`;
