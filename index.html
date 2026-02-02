@@ -2998,6 +2998,30 @@
         padding: 20px 15px;
         max-height: none;
         max-width: 100%;
+        font-size: 0.9em;
+      }
+
+      .resources-company-header {
+        font-size: 1.1em;
+        margin-bottom: 14px;
+      }
+
+      .resource-row {
+        gap: 10px;
+        padding: 8px 0;
+      }
+
+      .resource-title {
+        font-size: 0.85em;
+      }
+
+      .resource-action {
+        font-size: 0.75em;
+      }
+
+      .resources-empty-message {
+        font-size: 0.85em;
+        text-align: left;
       }
 
       /* ========================================
@@ -3223,19 +3247,19 @@
       .solutions-carousel-container {
         padding: 0 12px;
       }
-      
+
       .carousel-pagination {
         gap: 6px;
         margin-top: 10px;
       }
 
       .carousel-dot {
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
       }
 
       .carousel-dot.active {
-        width: 16px;
+        width: 12px;
       }
 
       /* Show carousel nav buttons on mobile */
@@ -3293,10 +3317,10 @@
       .demo-select {
         padding: 6px 8px !important;
         font-size: 0.7em !important;
-        width: auto;
-        max-width: 130px;
+        width: 120px !important;
+        max-width: 120px;
         min-width: 0;
-        flex: 0 0 auto;
+        flex: 0 1 auto;
         margin: 0;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -3307,6 +3331,19 @@
         font-size: 0.65em !important;
         padding: 5px 6px !important;
         white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .nav-tab-submit-lead {
+        font-size: 0.65em !important;
+        padding: 5px 6px !important;
+        white-space: nowrap;
+      }
+
+      .opportunity-actions .nav-tab-submit-lead {
+        font-size: 0.75em !important;
+        padding: 6px 10px !important;
       }
 
       .opportunity-actions .nav-tab-submit-lead {
@@ -3420,7 +3457,7 @@
 
       .history-detail-btn {
         font-size: 0.7em !important;
-        padding: 4px 8px !important;
+        padding: 2px 8px !important;
       }
 
       /* Contacts - clean mobile layout */
@@ -3510,7 +3547,11 @@
       }
 
       .modal-title {
-        font-size: 1.3em;
+        font-size: 1.1em;
+      }
+
+      .modal-subtitle {
+        font-size: 0.85em;
       }
 
       .modal-icon {
@@ -7920,10 +7961,12 @@
       const cardsPerPage = state.cardsPerPage || 3;
       const computedStyle = window.getComputedStyle(carousel);
       const gap = parseFloat(computedStyle.gap || computedStyle.columnGap || 0);
-      const totalGap = gap * (cardsPerPage - 1);
-      const cardWidth = (wrapperWidth - totalGap) / cardsPerPage;
+      const firstCard = carousel.children[0];
+      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : (wrapperWidth - gap * (cardsPerPage - 1)) / cardsPerPage;
       const cardWidthWithGap = cardWidth + gap;
-      const translateX = -(state.currentPage * cardWidthWithGap * cardsPerPage);
+      const maxTranslate = Math.max(0, (state.itemCount - cardsPerPage) * cardWidthWithGap);
+      const translateAmount = Math.min(state.currentPage * cardWidthWithGap * cardsPerPage, maxTranslate);
+      const translateX = -translateAmount;
       
       console.log(`[Carousel Debug] Updating position - Page: ${state.currentPage}, TranslateX: ${translateX}px, WrapperWidth: ${wrapperWidth}px`);
       carousel.style.transform = `translateX(${translateX}px)`;
@@ -8655,8 +8698,8 @@
         row.innerHTML = `
           <div class="history-card">
             <div class="history-product-content">
-              <div class="history-product-name">${productA.ProductName}</div>
               <div class="history-company">${logoA}<span>${productA.CompanyName}</span></div>
+              <div class="history-product-name">${productA.ProductName}</div>
               <div class="history-product-actions">
                 <button class="history-detail-btn" onclick="showProductDetails('${productA.ProductID}')">Full Description</button>
               </div>
@@ -8671,8 +8714,8 @@
           </div>
           <div class="history-card">
             <div class="history-product-content">
-              <div class="history-product-name">${productB.ProductName}</div>
               <div class="history-company">${logoB}<span>${productB.CompanyName}</span></div>
+              <div class="history-product-name">${productB.ProductName}</div>
               <div class="history-product-actions">
                 <button class="history-detail-btn" onclick="showProductDetails('${productB.ProductID}')">Full Description</button>
               </div>
