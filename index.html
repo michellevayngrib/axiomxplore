@@ -3032,13 +3032,13 @@
       }
 
       .home-title {
-        font-size: 1.8em;
+        font-size: 1.5em;
         margin-bottom: 8px;
       }
 
       .home-subtitle {
-        font-size: 0.9em;
-        margin-bottom: 22px;
+        font-size: 0.85em;
+        margin-bottom: 20px;
         white-space: nowrap;
       }
 
@@ -3048,23 +3048,23 @@
       }
 
       .journey-card {
-        padding: 18px 14px;
-        min-height: 180px;
+        padding: 16px 12px;
+        min-height: 165px;
       }
 
       .journey-icon {
-        font-size: 3em;
-        margin-bottom: 14px;
-        height: 56px;
+        font-size: 2.6em;
+        margin-bottom: 12px;
+        height: 50px;
       }
 
       .journey-title {
-        font-size: 1.05em;
+        font-size: 0.9em;
         margin-bottom: 6px;
       }
 
       .journey-description {
-        font-size: 0.85em;
+        font-size: 0.8em;
       }
 
       /* ========================================
@@ -3249,17 +3249,17 @@
       }
 
       .carousel-pagination {
-        gap: 6px;
-        margin-top: 10px;
+        gap: 4px;
+        margin-top: 8px;
       }
 
       .carousel-dot {
-        width: 4px;
-        height: 4px;
+        width: 6px;
+        height: 6px;
       }
 
       .carousel-dot.active {
-        width: 12px;
+        width: 16px;
       }
 
       /* Show carousel nav buttons on mobile */
@@ -3302,11 +3302,13 @@
       }
 
       .opportunity-btn {
-        padding: 6px 10px !important;
+        padding: 4px 8px !important;
         font-size: 0.75em !important;
         border-radius: 6px !important;
         white-space: nowrap;
         flex-shrink: 0;
+        width: auto !important;
+        flex: 0 0 auto !important;
       }
 
       .opportunity-pill {
@@ -3315,16 +3317,14 @@
       }
 
       .demo-select {
-        padding: 6px 8px !important;
+        padding: 4px 8px !important;
         font-size: 0.7em !important;
-        width: 120px !important;
-        max-width: 120px;
+        width: auto !important;
+        max-width: none;
         min-width: 0;
-        flex: 0 1 auto;
+        flex: 0 0 auto !important;
         margin: 0;
         white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
       }
 
       .nav-tab-submit-lead {
@@ -3343,12 +3343,7 @@
 
       .opportunity-actions .nav-tab-submit-lead {
         font-size: 0.75em !important;
-        padding: 6px 10px !important;
-      }
-
-      .opportunity-actions .nav-tab-submit-lead {
-        font-size: 0.75em !important;
-        padding: 6px 10px !important;
+        padding: 4px 8px !important;
       }
 
       /* Cross-sell History - force horizontal row layout */
@@ -3457,7 +3452,7 @@
 
       .history-detail-btn {
         font-size: 0.7em !important;
-        padding: 2px 8px !important;
+        padding: 1px 6px !important;
       }
 
       /* Contacts - clean mobile layout */
@@ -3473,8 +3468,10 @@
 
       .modal-badges .opportunity-btn,
       .modal-badges a.opportunity-btn {
-        padding: 8px 14px !important;
-        font-size: 0.8em !important;
+        padding: 4px 10px !important;
+        font-size: 0.75em !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
       }
 
       .modal-jump-container {
@@ -3607,11 +3604,11 @@
       }
 
       .home-title {
-        font-size: 1.5em;
+        font-size: 1.25em;
       }
 
       .home-subtitle {
-        font-size: 0.85em;
+        font-size: 0.8em;
         white-space: nowrap;
       }
 
@@ -3621,22 +3618,22 @@
       }
 
       .journey-card {
-        padding: 16px 12px;
-        min-height: 160px;
+        padding: 14px 10px;
+        min-height: 150px;
       }
 
       .journey-icon {
-        font-size: 2.8em;
-        margin-bottom: 12px;
-        height: 52px;
+        font-size: 2.4em;
+        margin-bottom: 10px;
+        height: 46px;
       }
 
       .journey-title {
-        font-size: 0.98em;
+        font-size: 0.85em;
       }
 
       .journey-description {
-        font-size: 0.8em;
+        font-size: 0.72em;
       }
 
       .brand-section {
@@ -7944,19 +7941,19 @@
         console.error(`[Carousel Error] Carousel element not found for position update: ${carouselId}`);
         return;
       }
-      
+
       const state = carouselStates[carouselId];
       if (!state) {
         console.error(`[Carousel Error] No state found for position update: ${carouselId}`);
         return;
       }
-      
+
       const wrapper = carousel.parentElement;
       if (!wrapper) {
         console.error(`[Carousel Error] Wrapper element not found for: ${carouselId}`);
         return;
       }
-      
+
       const wrapperWidth = wrapper.offsetWidth;
       const cardsPerPage = state.cardsPerPage || 3;
       const computedStyle = window.getComputedStyle(carousel);
@@ -7964,12 +7961,29 @@
       const firstCard = carousel.children[0];
       const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : (wrapperWidth - gap * (cardsPerPage - 1)) / cardsPerPage;
       const cardWidthWithGap = cardWidth + gap;
-      const maxTranslate = Math.max(0, (state.itemCount - cardsPerPage) * cardWidthWithGap);
-      const translateAmount = Math.min(state.currentPage * cardWidthWithGap * cardsPerPage, maxTranslate);
-      const translateX = -translateAmount;
-      
-      console.log(`[Carousel Debug] Updating position - Page: ${state.currentPage}, TranslateX: ${translateX}px, WrapperWidth: ${wrapperWidth}px`);
-      carousel.style.transform = `translateX(${translateX}px)`;
+      const scrollAmount = state.currentPage * cardWidthWithGap * cardsPerPage;
+
+      // On mobile (768px or less), use scrollLeft instead of transform
+      // because the carousel uses overflow-x: auto for touch scrolling
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        // Use smooth scrolling for arrow navigation on mobile
+        carousel.scrollTo({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+        // Clear any transform that might have been applied
+        carousel.style.transform = 'none';
+        console.log(`[Carousel Debug] Mobile scroll - Page: ${state.currentPage}, ScrollLeft: ${scrollAmount}px`);
+      } else {
+        // On desktop, use transform
+        const maxTranslate = Math.max(0, (state.itemCount - cardsPerPage) * cardWidthWithGap);
+        const translateAmount = Math.min(scrollAmount, maxTranslate);
+        const translateX = -translateAmount;
+        carousel.style.transform = `translateX(${translateX}px)`;
+        console.log(`[Carousel Debug] Desktop transform - Page: ${state.currentPage}, TranslateX: ${translateX}px`);
+      }
     }
     
     // Update carousel UI (arrows, dots)
