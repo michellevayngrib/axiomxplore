@@ -484,19 +484,19 @@
     .team-member-card {
       background: rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(10px);
-      border-radius: 10px;
-      padding: 14px 4px;
+      border-radius: 8px;
+      padding: 10px 4px;
       text-align: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       border: 1px solid rgba(255, 255, 255, 0.3);
-      flex: 0 0 calc(33.333% - 8px);
+      flex: 0 0 calc(25% - 9px);
       min-width: 0;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      height: 100px;
+      height: 85px;
       gap: 0px;
-      padding-top: 20px;
+      padding-top: 14px;
     }
     
     .team-member-card:hover {
@@ -656,17 +656,17 @@
     .solution-item {
       background: rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(10px);
-      border-radius: 10px;
-      padding: 14px 10px;
+      border-radius: 8px;
+      padding: 10px 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: 1px solid rgba(255, 255, 255, 0.3);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      flex: 0 0 calc(33.333% - 8px);
+      flex: 0 0 calc(25% - 9px);
       min-width: 0;
-      gap: 8px;
-      min-height: 100px;
+      gap: 6px;
+      min-height: 80px;
     }
     
     .solution-item:hover {
@@ -1619,12 +1619,14 @@
       -webkit-backdrop-filter: blur(30px);
       border-radius: 24px;
       max-width: 800px;
-      max-height: 90vh;
+      max-height: 85vh;
       width: 90%;
       overflow: hidden;
       box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
       animation: slideUp 0.3s ease;
       border: 1px solid rgba(255, 255, 255, 0.6);
+      display: flex;
+      flex-direction: column;
     }
     
     @keyframes slideUp {
@@ -1643,6 +1645,7 @@
       gap: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.5);
       border-radius: 20px 20px 0 0;
+      flex-shrink: 0;
     }
     
     .modal-icon {
@@ -1698,8 +1701,9 @@
     
     .modal-body {
       padding: 30px;
-      max-height: calc(90vh - 220px);
+      flex: 1;
       overflow-y: auto;
+      min-height: 0;
     }
     
     .modal-badges {
@@ -2251,9 +2255,10 @@
     .modal-actions {
       display: flex;
       gap: 12px;
-      padding: 24px 30px;
+      padding: 20px 30px;
       border-top: 1px solid rgba(229, 231, 235, 0.5);
       background: rgba(249, 250, 251, 0.4);
+      flex-shrink: 0;
     }
     
     /*  Cross-Sell History - Toolbar and filters */
@@ -2336,17 +2341,17 @@
     .history-row {
       display: flex;
       align-items: center;
-      gap: 20px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
     
     .history-card {
       flex: 1;
-      padding: 35px;
+      padding: 20px 24px;
       background: rgba(255, 255, 255, 0.35);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
-      border-radius: 20px;
+      border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.5);
       transition: all 0.3s ease;
@@ -2370,30 +2375,31 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 4px;
       width: auto;
       flex-shrink: 0;
-      padding: 0 10px;
+      padding: 0 8px;
     }
-    
+
     .history-arrow-icons {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 4px;
     }
-    
+
     .history-arrow-icon {
-      font-size: 20px;
+      font-size: 18px;
       color: rgba(107, 114, 128, 0.4);
     }
-    
+
     .history-client-count {
       color: rgba(107, 114, 128, 0.6);
       font-style: italic;
-      font-size: 1em;
-      line-height: 1.7;
+      font-size: 0.85em;
+      line-height: 1.3;
       white-space: nowrap;
+      text-align: center;
     }
     
     .history-product-name {
@@ -2507,6 +2513,7 @@
       gap: 12px;
       margin-top: 20px;
       flex-wrap: wrap;
+      justify-content: center;
     }
     
     .opportunity-btn {
@@ -2537,7 +2544,8 @@
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      padding-right: 12px;
+      padding-right: 24px;
+      padding-left: 24px;
     }
     
     .demo-select:hover {
@@ -3257,19 +3265,30 @@
       .modal-content {
         width: 98%;
         max-width: 98%;
+        max-height: 90vh;
         margin: 5px;
         padding: 0;
         border-radius: 16px;
+        display: flex;
+        flex-direction: column;
       }
 
       .modal-header {
         padding: 20px 15px;
         border-radius: 16px 16px 0 0;
+        flex-shrink: 0;
       }
 
       .modal-body {
         padding: 15px;
-        max-height: calc(90vh - 150px);
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+      }
+
+      .modal-actions {
+        flex-shrink: 0;
+        padding: 16px 15px;
       }
 
       .modal-section {
@@ -5093,7 +5112,7 @@
                 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 11px; height: 11px;">
                   <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                 </svg>
-                <span>Copy</span>
+                <span>Copy email</span>
               </button>
             ` : ''}
           </div>
@@ -5328,14 +5347,17 @@
         <div class="resources-content-panel" id="resourcesContentPanel"></div>
       `;
       
+      // Combine all companies in order (with resources first, then without)
+      const allCompaniesOrdered = [...companiesWithResources, ...companiesWithoutResources];
+
       // Render company navigator with companies with resources first, then without
       renderCompanyNavigator(companiesWithResources, companiesWithoutResources, resourcesByCompany);
 
-      // Populate mobile dropdown
-      populateResourcesMobileDropdown(companiesWithResources);
+      // Populate mobile dropdown with all companies
+      populateResourcesMobileDropdown(allCompaniesOrdered);
 
-      // Render only companies with resources in the main content
-      renderAllCompanyResources(companiesWithResources, resourcesByCompany);
+      // Render all companies in the main content (including those without resources)
+      renderAllCompanyResources(allCompaniesOrdered, resourcesByCompany);
 
       // Setup scroll spy (only for companies with resources)
       setupResourcesScrollSpy();
@@ -5370,15 +5392,15 @@
         navHtml += '<hr class="resources-nav-divider">';
       }
       
-      // Render companies without resources (visually de-emphasized)
+      // Render companies without resources (visually de-emphasized but still navigable)
       companiesWithoutResources.forEach((company) => {
         const encodedCompany = encodeURIComponent(company);
         navHtml += `
-          <button class="resources-company-nav-item no-resources" 
+          <button class="resources-company-nav-item no-resources"
                   data-company="${encodedCompany}"
                   data-company-name="${company.replace(/"/g, '&quot;')}"
                   data-has-resources="false"
-                  onclick="showEmptyCompanyResources('${encodedCompany}')">
+                  onclick="scrollToResourceCompany('${encodedCompany}')">
             ${company}
           </button>
         `;
@@ -5387,11 +5409,11 @@
       nav.innerHTML = navHtml;
     }
     
-    // Render all resources grouped by company in a single scrollable list (only companies with resources)
-    function renderAllCompanyResources(companiesWithResources, resourcesByCompany) {
+    // Render all resources grouped by company in a single scrollable list (all companies)
+    function renderAllCompanyResources(allCompanies, resourcesByCompany) {
       const panel = document.getElementById('resourcesContentPanel');
-      
-      if (companiesWithResources.length === 0) {
+
+      if (allCompanies.length === 0) {
         const emptyHtml = `
           <div class="resources-empty-message">
             <p style="color: rgba(107, 114, 128, 0.8); font-size: 1.1em; margin-bottom: 12px;">No resources available yet.</p>
@@ -5402,23 +5424,33 @@
         originalResourcesContent = emptyHtml;
         return;
       }
-      
+
       let html = '';
-      
-      companiesWithResources.forEach((company, index) => {
+
+      allCompanies.forEach((company, index) => {
         const companyId = `resource-company-${index}`;
         const companyResources = resourcesByCompany[company] || [];
-        
-        html += `<div class="resources-company-section" id="${companyId}" data-company="${encodeURIComponent(company)}" data-has-resources="true">`;
+        const hasResources = companyResources.length > 0;
+
+        html += `<div class="resources-company-section" id="${companyId}" data-company="${encodeURIComponent(company)}" data-has-resources="${hasResources}">`;
         html += `<div class="resources-company-header">${company}</div>`;
-        html += '<div class="resources-list">';
-        companyResources.forEach(resource => {
-          html += createResourceRowHTML(resource);
-        });
-        html += '</div>';
+
+        if (hasResources) {
+          html += '<div class="resources-list">';
+          companyResources.forEach(resource => {
+            html += createResourceRowHTML(resource);
+          });
+          html += '</div>';
+        } else {
+          html += `
+            <div class="resources-empty-message">
+              We're working on adding some resources here. If you have any suggestions, please <a href="#" onclick="showPage('submit'); return false;">submit your update here</a> to let us know!
+            </div>
+          `;
+        }
         html += '</div>';
       });
-      
+
       panel.innerHTML = html;
       // Store original content for restoration
       originalResourcesContent = html;
@@ -5582,49 +5614,37 @@
     let originalResourcesContent = null;
     let scrollSpyEnabled = true; // Flag to temporarily disable scroll spy
     
-    // Scroll to a specific company's section (only for companies with resources)
+    // Scroll to a specific company's section (all companies)
     function scrollToResourceCompany(encodedCompany) {
       const panel = document.getElementById('resourcesContentPanel');
       if (!panel) return;
-      
+
       // Temporarily disable scroll spy to prevent interference
       scrollSpyEnabled = false;
-      
-      // Restore original content if we're coming from an empty state
-      if (originalResourcesContent && panel.innerHTML !== originalResourcesContent) {
-        panel.innerHTML = originalResourcesContent;
-        // Re-setup scroll spy
-        setupResourcesScrollSpy();
-      }
-      
-      // Only look for sections with resources
-      const section = panel.querySelector(`.resources-company-section[data-company="${encodedCompany}"][data-has-resources="true"]`);
+
+      // Find section for any company (with or without resources)
+      const section = panel.querySelector(`.resources-company-section[data-company="${encodedCompany}"]`);
       if (section) {
-        // Update active nav item immediately (only for companies with resources)
-        document.querySelectorAll('.resources-company-nav-item[data-has-resources="true"]').forEach(item => {
+        // Update active nav item immediately
+        document.querySelectorAll('.resources-company-nav-item').forEach(item => {
           item.classList.remove('active');
           if (item.getAttribute('data-company') === encodedCompany) {
             item.classList.add('active');
           }
         });
-        
-        // Clear active state from companies without resources
-        document.querySelectorAll('.resources-company-nav-item[data-has-resources="false"]').forEach(item => {
-          item.classList.remove('active');
-        });
-        
+
         // Wait for DOM to update, then scroll
         setTimeout(() => {
           const panelRect = panel.getBoundingClientRect();
           const sectionRect = section.getBoundingClientRect();
           const scrollTop = panel.scrollTop;
-          const targetScroll = scrollTop + (sectionRect.top - panelRect.top) - 120; // Offset for sticky header
-          
+          const targetScroll = scrollTop + (sectionRect.top - panelRect.top) - 20; // Small offset for spacing
+
           panel.scrollTo({
             top: Math.max(0, targetScroll),
             behavior: 'smooth'
           });
-          
+
           // Re-enable scroll spy after scroll completes
           setTimeout(() => {
             scrollSpyEnabled = true;
@@ -7231,8 +7251,8 @@
           const aboutContent = document.getElementById('aboutContentArea');
       
       // Calculate carousel pages
-      const teamPages = Math.ceil(teamMembers.length / 3);
-      const solutionPages = Math.ceil(companyProducts.length / 3);
+      const teamPages = Math.ceil(teamMembers.length / 4);
+      const solutionPages = Math.ceil(companyProducts.length / 4);
       
       let html = `
         <div class="company-page-view">
@@ -7346,11 +7366,8 @@
         initializeCarousel(`solutions-carousel-${index}`, companyProducts.length);
       }
       
-      // Scroll to top
-      aboutContent.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      // Scroll to top immediately (no smooth behavior to ensure it works)
+      aboutContent.scrollTop = 0;
     }
 
     // Function to render all companies for mobile view (scrollable)
@@ -7490,7 +7507,7 @@
         return;
       }
       
-      const pages = Math.ceil(itemCount / 3);
+      const pages = Math.ceil(itemCount / 4);
       console.log(`[Carousel Debug] Calculated pages: ${pages} for ${itemCount} items`);
       carouselStates[carouselId] = {
         currentPage: 0,
@@ -7567,9 +7584,9 @@
       }
       
       const wrapperWidth = wrapper.offsetWidth;
-      const cardWidth = (wrapperWidth - 24) / 3; // 40px for 2 gaps (20px each)
-      const cardWidthWithGap = cardWidth + 12; // 20px gap
-      const translateX = -(state.currentPage * cardWidthWithGap * 3);
+      const cardWidth = (wrapperWidth - 36) / 4; // 36px for 3 gaps (12px each)
+      const cardWidthWithGap = cardWidth + 12; // 12px gap
+      const translateX = -(state.currentPage * cardWidthWithGap * 4);
       
       console.log(`[Carousel Debug] Updating position - Page: ${state.currentPage}, TranslateX: ${translateX}px, WrapperWidth: ${wrapperWidth}px`);
       carousel.style.transform = `translateX(${translateX}px)`;
