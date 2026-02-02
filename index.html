@@ -3013,34 +3013,16 @@
       }
 
       .home-subtitle {
-        font-size: 0.9em;
-        margin-bottom: 22px;
-        white-space: nowrap;
+        font-size: 1em;
+        margin-bottom: 30px;
       }
 
       .journey-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 15px;
       }
 
       .journey-card {
-        padding: 18px 14px;
-        min-height: 180px;
-      }
-
-      .journey-icon {
-        font-size: 3em;
-        margin-bottom: 14px;
-        height: 56px;
-      }
-
-      .journey-title {
-        font-size: 1.05em;
-        margin-bottom: 6px;
-      }
-
-      .journey-description {
-        font-size: 0.85em;
+        padding: 25px 20px;
       }
 
       /* ========================================
@@ -3285,19 +3267,6 @@
         font-size: 0.65em !important;
         padding: 5px 6px !important;
         white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-
-      .nav-tab-submit-lead {
-        font-size: 0.65em !important;
-        padding: 5px 6px !important;
-        white-space: nowrap;
-      }
-
-      .opportunity-actions .nav-tab-submit-lead {
-        font-size: 0.75em !important;
-        padding: 6px 10px !important;
       }
 
       .opportunity-actions .nav-tab-submit-lead {
@@ -3350,8 +3319,6 @@
         text-align: center;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        gap: 4px;
         width: 100%;
       }
 
@@ -3406,7 +3373,6 @@
       .history-product-actions {
         display: flex;
         justify-content: center;
-        margin-top: 2px;
       }
 
       .history-detail-btn {
@@ -3558,35 +3524,6 @@
 
       .home-title {
         font-size: 1.5em;
-      }
-
-      .home-subtitle {
-        font-size: 0.85em;
-        white-space: nowrap;
-      }
-
-      .journey-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .journey-card {
-        padding: 16px 12px;
-        min-height: 160px;
-      }
-
-      .journey-icon {
-        font-size: 2.8em;
-        margin-bottom: 12px;
-        height: 52px;
-      }
-
-      .journey-title {
-        font-size: 0.98em;
-      }
-
-      .journey-description {
-        font-size: 0.8em;
       }
 
       .brand-section {
@@ -8400,7 +8337,7 @@
               
               return `<div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
                 ${pillTags.map(pill => `
-                  <span class="opportunity-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(99, 102, 241, 0.08); border-radius: 8px; color: rgba(55, 65, 81, 0.8); font-family: 'Inter', sans-serif; font-size: 1em; line-height: 1.7; font-style: normal; cursor: default;">
+                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(99, 102, 241, 0.08); border-radius: 8px; color: rgba(55, 65, 81, 0.8); font-family: 'Inter', sans-serif; font-size: 1em; line-height: 1.7; font-style: normal; cursor: default;">
                     <i class="ph ${pill.icon}" style="font-size: 1em; color: rgba(99, 102, 241, 0.7); display: inline-block; vertical-align: middle;"></i>
                     <span>${pill.text}</span>
                   </span>
