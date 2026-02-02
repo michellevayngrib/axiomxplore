@@ -3129,7 +3129,7 @@
 
       /* "Top X cross-sell opportunities" - fit on one line */
       .results-header h3 {
-        font-size: 0.9em !important;
+        font-size: 1em !important;
         white-space: nowrap;
       }
 
@@ -3138,7 +3138,7 @@
         white-space: nowrap;
         display: inline-flex !important;
         align-items: center;
-        font-size: 0.75em !important;
+        font-size: 0.8em !important;
       }
 
       .recommendation-toggle span {
@@ -3224,20 +3224,6 @@
         padding: 0 12px;
       }
 
-      .carousel-pagination {
-        gap: 6px;
-        margin-top: 10px;
-      }
-
-      .carousel-dot {
-        width: 6px;
-        height: 6px;
-      }
-
-      .carousel-dot.active {
-        width: 16px;
-      }
-
       /* Show carousel nav buttons on mobile */
       .carousel-nav-btn {
         display: flex;
@@ -3285,19 +3271,19 @@
         flex-shrink: 0;
       }
 
-      .opportunity-pill {
-        font-size: 0.8em !important;
-        line-height: 1.4;
-      }
-
       .demo-select {
-        padding: 6px 8px !important;
-        font-size: 0.7em !important;
+        padding: 6px 10px !important;
+        font-size: 0.75em !important;
         width: auto;
-        max-width: 130px;
+        max-width: 160px;
         min-width: 0;
         flex: 0 0 auto;
         margin: 0;
+      }
+
+      .nav-tab-submit-lead {
+        font-size: 0.65em !important;
+        padding: 5px 6px !important;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -3307,6 +3293,11 @@
         font-size: 0.65em !important;
         padding: 5px 6px !important;
         white-space: nowrap;
+      }
+
+      .opportunity-actions .nav-tab-submit-lead {
+        font-size: 0.75em !important;
+        padding: 6px 10px !important;
       }
 
       .opportunity-actions .nav-tab-submit-lead {
@@ -7920,8 +7911,8 @@
       const cardsPerPage = state.cardsPerPage || 3;
       const computedStyle = window.getComputedStyle(carousel);
       const gap = parseFloat(computedStyle.gap || computedStyle.columnGap || 0);
-      const firstCard = carousel.children[0];
-      const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : (wrapperWidth - gap * (cardsPerPage - 1)) / cardsPerPage;
+      const totalGap = gap * (cardsPerPage - 1);
+      const cardWidth = (wrapperWidth - totalGap) / cardsPerPage;
       const cardWidthWithGap = cardWidth + gap;
       const translateX = -(state.currentPage * cardWidthWithGap * cardsPerPage);
       
