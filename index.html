@@ -3235,6 +3235,18 @@
         justify-content: center !important;
         text-align: center !important;
         width: 100%;
+        position: relative;
+      }
+
+      .team-member-card .team-member-email-btn span {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+
+      .team-member-card .team-member-email-btn svg {
+        position: absolute;
+        left: 6px;
       }
 
       /* Touch-responsive carousels */
@@ -3342,8 +3354,10 @@
         width: auto !important;
         min-width: 0 !important;
         flex: 0 0 auto !important;
-        padding-right: 0 !important;
+        padding-right: 6px !important;
+        padding-left: 6px !important;
         min-height: auto !important;
+        background-image: none !important;
       }
 
       .nav-tab-submit-lead {
@@ -3356,11 +3370,6 @@
         font-size: 0.75em !important;
         padding: 4px 8px !important;
         min-height: auto !important;
-      }
-
-      .opportunity-actions .opportunity-btn-compact {
-        padding-top: 2px !important;
-        padding-bottom: 2px !important;
       }
 
       /* Cross-sell History - force horizontal row layout */
