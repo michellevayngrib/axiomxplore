@@ -3207,6 +3207,7 @@
         display: flex !important;
         flex-direction: column !important;
         justify-content: space-between !important;
+        padding-bottom: 8px !important;
       }
       
       .solution-item {
@@ -7423,7 +7424,7 @@
       // Multiple demos - select dropdown
       return `
         <select class="opportunity-btn demo-select" onchange="if(this.value) window.open(this.value, '_blank'); this.value='';" style="text-align: left; cursor: pointer;">
-          <option value="">View Demos (${demos.length}) ▾</option>
+          <option value="">View Demos (${demos.length})</option>
           ${demos.map(d => `<option value="${d.url}">${d.label}</option>`).join('')}
         </select>
       `;
