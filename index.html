@@ -3206,8 +3206,7 @@
         min-height: 95px !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
-        padding-bottom: 8px !important;
+        justify-content: space-between !important;
       }
       
       .solution-item {
@@ -3228,13 +3227,26 @@
       }
 
       .team-member-card .team-member-email-btn {
-        font-size: 0.7em !important;
-        line-height: 1.4 !important;
-        margin-top: -4px !important;
-        padding: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 4px !important;
+        font-size: 0.65em !important;
+        padding: 2px 6px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        align-self: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100%;
+        position: relative;
+      }
+
+      .team-member-card .team-member-email-btn span {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+
+      .team-member-card .team-member-email-btn svg {
+        position: absolute;
+        left: 6px;
       }
 
       /* Touch-responsive carousels */
@@ -7410,7 +7422,7 @@
       // Multiple demos - select dropdown
       return `
         <select class="opportunity-btn demo-select" onchange="if(this.value) window.open(this.value, '_blank'); this.value='';" style="text-align: left; cursor: pointer;">
-          <option value="">View Demos (${demos.length})</option>
+          <option value="">View Demos (${demos.length}) ▾</option>
           ${demos.map(d => `<option value="${d.url}">${d.label}</option>`).join('')}
         </select>
       `;
@@ -7626,10 +7638,10 @@
                     <div class="team-carousel" id="team-carousel-${index}">
                       ${teamMembers.map((member, memberIndex) => `
                         <div class="team-member-card">
-                          <h4 class="team-member-name">
+                          <h4 class="team-member-name" style="margin-bottom: -2px; line-height: 1.6;">
                             ${member.PersonName}
                           </h4>
-                          <p class="team-member-title">${member.PersonTitle}</p>
+                          <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
                           ${member['Email Address'] ? 
                             `<button class="team-member-email-btn" id="email-btn-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', ${index}, ${memberIndex})">
                               <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -7763,7 +7775,7 @@
                             </h4>
                             <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
                             ${member['Email Address'] ?
-                              `<button class="team-member-email-btn" id="email-btn-mobile-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', 'mobile-${index}', ${memberIndex})" style="margin-top: -2px; padding: 0; display: flex; align-items: center; gap: 4px; font-size: 0.7em; line-height: 1.4;">
+                              `<button class="team-member-email-btn" id="email-btn-mobile-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', 'mobile-${index}', ${memberIndex})">
                                 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                                 </svg>
