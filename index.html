@@ -8513,10 +8513,10 @@
             <div class="opportunity-actions">
               ${demoHtml}
               ${learnMoreHtml}
-              <button class="opportunity-btn" onclick="showProductDetails('${product.ProductID}')">
+              <button class="opportunity-btn opportunity-btn-compact" onclick="showProductDetails('${product.ProductID}')">
                 Full Description
               </button>
-              <button class="nav-tab-submit-lead" onclick="openCrossSellLeadForCompany('${(product.CompanyName || '').replace(/'/g, "\\'")}')">
+              <button class="nav-tab-submit-lead opportunity-btn-compact" onclick="openCrossSellLeadForCompany('${(product.CompanyName || '').replace(/'/g, "\\'")}')">
                 Submit a Cross-Sell Referral
               </button>
             </div>
