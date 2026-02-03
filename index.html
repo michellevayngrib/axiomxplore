@@ -3206,7 +3206,8 @@
         min-height: 95px !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        padding-bottom: 8px !important;
       }
       
       .solution-item {
@@ -3227,10 +3228,9 @@
       }
 
       .team-member-card .team-member-email-btn {
-        font-size: 0.65em !important;
-        padding: 2px 6px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
+        font-size: 0.75em !important;
+        line-height: 1.4 !important;
+        margin-top: 0 !important;
       }
 
       /* Touch-responsive carousels */
@@ -3324,6 +3324,7 @@
         flex-shrink: 0;
         width: auto !important;
         flex: 0 0 auto !important;
+        min-height: auto !important;
       }
 
       .opportunity-pill {
@@ -3337,6 +3338,10 @@
         width: auto !important;
         min-width: 0 !important;
         flex: 0 0 auto !important;
+        padding-right: 6px !important;
+        padding-left: 6px !important;
+        min-height: auto !important;
+        background-image: none !important;
       }
 
       .nav-tab-submit-lead {
@@ -3348,6 +3353,7 @@
       .opportunity-actions .nav-tab-submit-lead {
         font-size: 0.75em !important;
         padding: 4px 8px !important;
+        min-height: auto !important;
       }
 
       /* Cross-sell History - force horizontal row layout */
@@ -7400,7 +7406,7 @@
       // Multiple demos - select dropdown
       return `
         <select class="opportunity-btn demo-select" onchange="if(this.value) window.open(this.value, '_blank'); this.value='';" style="text-align: left; cursor: pointer;">
-          <option value="">View Demos (${demos.length}) ▾</option>
+          <option value="">View Demos (${demos.length})</option>
           ${demos.map(d => `<option value="${d.url}">${d.label}</option>`).join('')}
         </select>
       `;
@@ -7616,10 +7622,10 @@
                     <div class="team-carousel" id="team-carousel-${index}">
                       ${teamMembers.map((member, memberIndex) => `
                         <div class="team-member-card">
-                          <h4 class="team-member-name" style="margin-bottom: -2px; line-height: 1.6;">
+                          <h4 class="team-member-name">
                             ${member.PersonName}
                           </h4>
-                          <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
+                          <p class="team-member-title">${member.PersonTitle}</p>
                           ${member['Email Address'] ? 
                             `<button class="team-member-email-btn" id="email-btn-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', ${index}, ${memberIndex})">
                               <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
