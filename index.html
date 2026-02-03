@@ -3750,6 +3750,16 @@
   </style>
 </head>
 <body>
+  <!-- OPTIMIZED: SVG Sprite - Define icons once, reference with <use> -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="icon-copy" viewBox="0 0 16 16">
+      <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 16 16">
+      <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+    </symbol>
+  </svg>
+
   <!-- Top Navigation -->
   <nav class="top-nav">
     <div class="nav-logo" onclick="showPage('home')">
@@ -4227,7 +4237,36 @@
     let allGlossary = [];
     let currentOpportunities = []; // Store opportunities for export
     let suppressFilterTracking = false;
-    
+
+    // OPTIMIZED: Cached product lookup map for O(1) access instead of O(n) Array.find()
+    let _productLookupMap = null;
+
+    /**
+     * Get or create a Map for O(1) product lookup by ProductID
+     * Cached and invalidated when products change
+     */
+    function getProductLookupMap() {
+      // Return cached map if valid
+      if (_productLookupMap && _productLookupMap.size === allProducts.length) {
+        return _productLookupMap;
+      }
+
+      // Build new map
+      _productLookupMap = new Map();
+      allProducts.forEach(product => {
+        if (product.ProductID) {
+          _productLookupMap.set(product.ProductID, product);
+        }
+      });
+
+      return _productLookupMap;
+    }
+
+    // Invalidate product map when products are updated (call this when allProducts changes)
+    function invalidateProductMap() {
+      _productLookupMap = null;
+    }
+
     // ============================================
     // USAGE TRACKING - Session and User Identification
     // ============================================
@@ -4606,10 +4645,149 @@
       } else {
         logPerf('Background refresh', 'start');
       }
-      
-      // FIX: Load ALL data in PARALLEL instead of sequentially
-      // This reduces total load time from ~2000ms to ~500ms
-      
+
+      // OPTIMIZED: Try batch loader first (single backend call, opens spreadsheet once)
+      // Falls back to individual calls if batch loader fails
+      google.script.run
+        .withSuccessHandler(function(batchData) {
+          logPerf('Batch data loaded', 'success');
+          processBatchData(batchData);
+        })
+        .withFailureHandler(function(error) {
+          logPerf('Batch loader failed, falling back to individual calls', error);
+          loadInitialDataFallback(isBackgroundRefresh);
+        })
+        .getBatchInitialData();
+    }
+
+    // Process batch data and populate all globals
+    function processBatchData(data) {
+      if (!data) return;
+
+      // Products
+      if (data.products) {
+        allProducts = data.products;
+        allProductsData = data.products;
+        dataReady.products = true;
+        setCachedData(CACHE_KEYS.products, data.products);
+        logPerf('Products loaded (batch)', data.products.length);
+      }
+
+      // Company Info
+      if (data.companyInfo) {
+        allCompaniesData = data.companyInfo;
+        allCompaniesData.sort((a, b) => (a.CompanyName || '').localeCompare(b.CompanyName || ''));
+        setCachedData(CACHE_KEYS.companyInfo, data.companyInfo);
+        logPerf('Company info loaded (batch)', data.companyInfo.length);
+      }
+
+      // Product Details
+      if (data.productDetails) {
+        allProductDetails = data.productDetails;
+        dataReady.productDetails = true;
+        setCachedData(CACHE_KEYS.productDetails, data.productDetails);
+        logPerf('Product details loaded (batch)', data.productDetails.length);
+      }
+
+      // Industries
+      if (data.industries) {
+        allIndustries = data.industries;
+        dataReady.industries = true;
+        setCachedData(CACHE_KEYS.industries, data.industries);
+        logPerf('Industries loaded (batch)', data.industries.length);
+      }
+
+      // Contacts
+      if (data.contacts) {
+        allContacts = data.contacts;
+        dataReady.contacts = true;
+        setCachedData(CACHE_KEYS.contacts, data.contacts);
+        logPerf('Contacts loaded (batch)', data.contacts.length);
+      }
+
+      // Resources
+      if (data.resources) {
+        allResources = data.resources;
+        dataReady.resources = true;
+        setCachedData(CACHE_KEYS.resources, data.resources);
+        logPerf('Resources loaded (batch)', data.resources.length);
+      }
+
+      // Glossary
+      if (data.glossary) {
+        allGlossary = data.glossary;
+        dataReady.glossary = true;
+        setCachedData(CACHE_KEYS.glossary, data.glossary);
+        buildAbbreviationMap();
+        logPerf('Glossary loaded (batch)', data.glossary.length);
+      }
+
+      // Teams
+      if (data.teams) {
+        allTeamsData = data.teams;
+        setCachedData(CACHE_KEYS.teams, data.teams);
+        logPerf('Teams loaded (batch)', Object.keys(data.teams).length);
+      }
+
+      // Process companies from products and company info
+      if (data.products && data.companyInfo) {
+        const companiesMap = {};
+        data.products.forEach(p => {
+          if (!companiesMap[p.CompanyName]) {
+            const companyInfoItem = data.companyInfo.find(c => c.CompanyName === p.CompanyName);
+            companiesMap[p.CompanyName] = {
+              name: p.CompanyName,
+              logoURL: p.CompanyLogoURL,
+              shortBlurb: companyInfoItem ? (companyInfoItem.ShortBlurb || companyInfoItem.shortBlurb || '') : '',
+              headquarters: companyInfoItem ? (companyInfoItem.Headquarters || companyInfoItem.headquarters || '') : '',
+              productCount: 0,
+              products: []
+            };
+          }
+          companiesMap[p.CompanyName].productCount++;
+          companiesMap[p.CompanyName].products.push(p);
+        });
+        allCompanies = Object.values(companiesMap);
+        allCompanies.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        dataReady.companies = true;
+        logPerf('Companies processed (batch)', allCompanies.length);
+      }
+
+      // Mark about page ready
+      if (data.companyInfo && data.teams && data.products) {
+        dataReady.about = true;
+        logPerf('About page data ready (batch)', 'complete');
+      }
+
+      // Progressive enhancement: Update UI if visible
+      if (document.getElementById('knowledgePage').classList.contains('active')) {
+        populateFilters();
+        renderKnowledgeBase();
+      }
+      if (document.getElementById('aboutPage').classList.contains('active')) {
+        renderAboutPage();
+      }
+
+      // Load cross-sell history separately (not in batch due to complexity)
+      loadCrossSellHistoryPromise(true);
+
+      // Load cross-sell lead URL separately
+      google.script.run
+        .withSuccessHandler(function(url) {
+          if (url && url.trim() !== '') {
+            crossSellLeadUrl = url;
+            localStorage.setItem('crossSellLeadUrl', url);
+            localStorage.setItem('crossSellLeadUrlTime', Date.now().toString());
+          }
+        })
+        .withFailureHandler(function() {})
+        .getCrossSellLeadUrl();
+    }
+
+    // Fallback: Load data using individual API calls (original method)
+    function loadInitialDataFallback(isBackgroundRefresh = false) {
+      logPerf('Using fallback individual loaders', 'start');
+
       // 1. Load products
       const productsPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4628,8 +4806,8 @@
           })
           .getAllProducts();
       });
-      
-      // 2. Load company info IN PARALLEL (not waiting for products)
+
+      // 2. Load company info IN PARALLEL
       const companyInfoPromise = new Promise((resolve, reject) => {
         google.script.run
           .withSuccessHandler(function(companyInfo) {
@@ -4640,11 +4818,11 @@
           .withFailureHandler(function(error) {
             logPerf('Company info error', error);
             console.error('Error loading company info:', error);
-            resolve([]); // Resolve with empty array instead of reject
+            resolve([]);
           })
           .getCompanyInfo();
       });
-      
+
       // 3. Load industries IN PARALLEL
       const industriesPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4663,7 +4841,7 @@
           })
           .getUniqueIndustries();
       });
-      
+
       // 4. Load product details IN PARALLEL
       const productDetailsPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4682,11 +4860,11 @@
           })
           .getProductDetails();
       });
-      
+
       // 5. Load history IN PARALLEL
       const historyPromise = loadCrossSellHistoryPromise(true);
 
-      // 6. Load teams IN PARALLEL (for about page)
+      // 6. Load teams IN PARALLEL
       const teamsPromise = new Promise((resolve, reject) => {
         google.script.run
           .withSuccessHandler(function(teams) {
@@ -4698,11 +4876,11 @@
           .withFailureHandler(function(error) {
             logPerf('Teams error', error);
             console.error('Error loading teams:', error);
-            resolve({}); // Resolve with empty object instead of reject
+            resolve({});
           })
           .getAllLeadershipTeams();
       });
-      
+
       // 7. Load cross-sell lead URL IN PARALLEL
       const crossSellLeadUrlPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4718,11 +4896,11 @@
           .withFailureHandler(function(error) {
             logPerf('Cross-sell lead URL error', error);
             console.error('Error loading cross-sell lead URL:', error);
-            resolve(''); // Resolve with empty string instead of reject
+            resolve('');
           })
           .getCrossSellLeadUrl();
       });
-      
+
       // 8. Load contacts IN PARALLEL
       const contactsPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4737,11 +4915,11 @@
             logPerf('Contacts error', error);
             console.error('Error loading contacts:', error);
             dataReady.contacts = false;
-            resolve([]); // Resolve with empty array instead of reject
+            resolve([]);
           })
           .getContacts();
       });
-      
+
       // 9. Load resources IN PARALLEL
       const resourcesPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4756,11 +4934,11 @@
             logPerf('Resources error', error);
             console.error('Error loading resources:', error);
             dataReady.resources = false;
-            resolve([]); // Resolve with empty array instead of reject
+            resolve([]);
           })
           .getResources();
       });
-      
+
       // 10. Load glossary IN PARALLEL
       const glossaryPromise = new Promise((resolve, reject) => {
         google.script.run
@@ -4769,7 +4947,6 @@
             allGlossary = glossary;
             dataReady.glossary = true;
             setCachedData(CACHE_KEYS.glossary, glossary);
-            // Build abbreviation map for tooltips
             buildAbbreviationMap();
             resolve(glossary);
           })
@@ -4777,15 +4954,15 @@
             logPerf('Glossary error', error);
             console.error('Error loading glossary:', error);
             dataReady.glossary = false;
-            resolve([]); // Resolve with empty array instead of reject
+            resolve([]);
           })
           .getGlossary();
       });
-      
+
       // Wait for products and companyInfo to process companies
       Promise.all([productsPromise, companyInfoPromise]).then(([products, companyInfo]) => {
         logPerf('Processing companies', 'start');
-        
+
         const companiesMap = {};
         products.forEach(p => {
           if (!companiesMap[p.CompanyName]) {
@@ -4803,12 +4980,10 @@
           companiesMap[p.CompanyName].products.push(p);
         });
         allCompanies = Object.values(companiesMap);
-        // Sort companies alphabetically by name
         allCompanies.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         dataReady.companies = true;
         logPerf('Companies processed', allCompanies.length);
-        
-        // Progressive enhancement: Update UI if visible
+
         if (document.getElementById('knowledgePage').classList.contains('active')) {
           populateFilters();
           renderKnowledgeBase();
@@ -4816,19 +4991,17 @@
       }).catch(error => {
         console.error('Error processing companies:', error);
       });
-      
-      // Wait for about page data (companyInfo, teams, products) to be ready
+
+      // Wait for about page data
       Promise.all([companyInfoPromise, teamsPromise, productsPromise]).then(([companyInfo, teams, products]) => {
         if (companyInfo && teams && products) {
           allCompaniesData = companyInfo;
-          // Sort companies alphabetically by CompanyName
           allCompaniesData.sort((a, b) => (a.CompanyName || '').localeCompare(b.CompanyName || ''));
           allTeamsData = teams || {};
           allProductsData = products;
           dataReady.about = true;
           logPerf('About page data ready', 'from background load');
-          
-          // Progressive enhancement: Update UI if visible
+
           if (document.getElementById('aboutPage').classList.contains('active')) {
             renderAboutPage();
           }
@@ -4836,8 +5009,7 @@
       }).catch(error => {
         console.error('Error loading about page data:', error);
       });
-      
-      // Wait for industries to update filters if needed
+
       industriesPromise.then(() => {
         if (document.getElementById('knowledgePage').classList.contains('active')) {
           populateFilters();
@@ -5393,11 +5565,14 @@
       
       container.innerHTML = '<div id="contactsList" style="display: flex; flex-direction: column; gap: 16px;"></div>';
       const list = document.getElementById('contactsList');
-      
+
+      // OPTIMIZED: Use DocumentFragment for batch DOM updates
+      const fragment = document.createDocumentFragment();
       contacts.forEach((contact, index) => {
         const row = createContactRow(contact, index);
-        list.appendChild(row);
+        fragment.appendChild(row);
       });
+      list.appendChild(fragment);
     }
     
     // Create contact row (list item) - mobile optimized layout
@@ -5434,9 +5609,7 @@
             ${company ? `<span style="font-size: 0.8em; color: rgba(99, 102, 241, 0.8); font-weight: 500;">${company}</span>` : '<span></span>'}
             ${email ? `
               <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})" style="font-size: 0.75em; padding: 4px 10px; margin: 0; flex-shrink: 0;">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 11px; height: 11px;">
-                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
-                </svg>
+                <svg style="width: 11px; height: 11px;"><use href="#icon-copy"></use></svg>
                 <span>Copy email</span>
               </button>
             ` : ''}
@@ -5459,9 +5632,7 @@
             ${company ? `<span style="font-size: 1em; color: rgba(107, 114, 128, 0.8); font-weight: 500;">${company}</span>` : ''}
             ${email ? `
               <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
-                </svg>
+                <svg><use href="#icon-copy"></use></svg>
                 <span>Copy email</span>
               </button>
             ` : ''}
@@ -5479,9 +5650,7 @@
         if (btn) {
           const originalHTML = btn.innerHTML;
           btn.innerHTML = `
-            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px; fill: currentColor; flex-shrink: 0;">
-              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-            </svg>
+            <svg style="width: 12px; height: 12px; fill: currentColor; flex-shrink: 0;"><use href="#icon-check"></use></svg>
             <span>Email copied</span>
           `;
           btn.classList.add('copied');
@@ -6856,10 +7025,13 @@
         grid.appendChild(backButton);
       }
       
+      // OPTIMIZED: Use DocumentFragment to batch DOM updates (reduces layout thrashing)
+      const fragment = document.createDocumentFragment();
+
       if (currentView === 'brand' && !selectedBrand) {
         allCompanies.forEach(company => {
           const card = createBrandCard(company);
-          grid.appendChild(card);
+          fragment.appendChild(card);
         });
       } else {
         // Render ALL products - applyFilters() will handle filtering
@@ -6869,12 +7041,15 @@
           const nameB = (b.ProductName || '').toLowerCase();
           return nameA.localeCompare(nameB);
         });
-        
+
         productsToRender.forEach(product => {
           const card = createProductCard(product);
-          grid.appendChild(card);
+          fragment.appendChild(card);
         });
       }
+
+      // Single DOM update instead of per-card
+      grid.appendChild(fragment);
       
       // Always call applyFilters after rendering
       applyFilters();
@@ -7140,18 +7315,20 @@
     window.resetAllFilters = resetAllFilters;
     
     function showProductDetails(productId) {
-      const product = allProducts.find(p => p.ProductID === productId);
+      // OPTIMIZED: Use lookup map for O(1) access
+      const productMap = getProductLookupMap();
+      const product = productMap.get(productId);
       if (!product) return;
-      
+
       // Track product view
-      trackEvent('product_view', { 
+      trackEvent('product_view', {
         productId: productId,
         productName: product.ProductName,
         companyName: product.CompanyName,
         page: currentPage
       });
-      
-      // Find matching product details
+
+      // Find matching product details (less frequent access, keep as find)
       const productDetail = allProductDetails.find(pd => pd.ProductID === productId);
       
       document.getElementById('modalCompany').textContent = product.CompanyName;
@@ -7434,9 +7611,7 @@
         if (btn) {
           const originalHTML = btn.innerHTML;
           btn.innerHTML = `
-            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px; fill: currentColor; flex-shrink: 0;">
-              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-            </svg>
+            <svg style="width: 12px; height: 12px; fill: currentColor; flex-shrink: 0;"><use href="#icon-check"></use></svg>
             <span>Email copied</span>
           `;
           btn.classList.add('copied');
@@ -7478,71 +7653,97 @@
     }
     
     // Load About Us page from database
+    // OPTIMIZED: Uses already-loaded globals when available instead of re-fetching
     function loadAboutPage() {
       if (aboutPageLoaded) return;
-      
-      logPerf('About page API load', 'start');
-      
-      Promise.all([
-        new Promise((resolve) => {
+
+      logPerf('About page load', 'start');
+
+      // Check if we already have the data from loadInitialData()
+      const hasCompanyInfo = allCompaniesData && allCompaniesData.length > 0;
+      const hasTeams = allTeamsData && Object.keys(allTeamsData).length > 0;
+      const hasProducts = allProducts && allProducts.length > 0;
+
+      // If all data is already loaded, render immediately without API calls
+      if (hasCompanyInfo && hasTeams && hasProducts) {
+        logPerf('About page using cached globals', 'instant');
+        // Use allProducts for allProductsData if not set
+        if (!allProductsData || allProductsData.length === 0) {
+          allProductsData = allProducts;
+        }
+        renderAboutPage();
+        return;
+      }
+
+      // Only fetch what's missing
+      const promises = [];
+
+      if (!hasCompanyInfo) {
+        promises.push(new Promise((resolve) => {
           google.script.run
-            .withSuccessHandler(resolve)
+            .withSuccessHandler((companies) => {
+              allCompaniesData = companies || [];
+              allCompaniesData.sort((a, b) => (a.CompanyName || '').localeCompare(b.CompanyName || ''));
+              setCachedData(CACHE_KEYS.companyInfo, companies);
+              resolve();
+            })
+            .withFailureHandler(() => resolve())
             .getCompanyInfo();
-        }),
-        new Promise((resolve) => {
+        }));
+      }
+
+      if (!hasTeams) {
+        promises.push(new Promise((resolve) => {
           google.script.run
-            .withSuccessHandler(resolve)
+            .withSuccessHandler((teams) => {
+              allTeamsData = teams || {};
+              setCachedData(CACHE_KEYS.teams, teams);
+              resolve();
+            })
+            .withFailureHandler(() => resolve())
             .getAllLeadershipTeams();
-        }),
-        new Promise((resolve) => {
+        }));
+      }
+
+      if (!hasProducts) {
+        promises.push(new Promise((resolve) => {
           google.script.run
-            .withSuccessHandler(resolve)
+            .withSuccessHandler((products) => {
+              allProducts = products || [];
+              allProductsData = products || [];
+              setCachedData(CACHE_KEYS.products, products);
+              resolve();
+            })
+            .withFailureHandler(() => resolve())
             .getAllProducts();
-        })
-      ]).then(([companies, teams, products]) => {
+        }));
+      } else {
+        // Products already loaded, sync to allProductsData
+        allProductsData = allProducts;
+      }
+
+      if (promises.length === 0) {
+        // All data ready, render now
+        renderAboutPage();
+        return;
+      }
+
+      logPerf('About page fetching missing data', promises.length + ' calls');
+
+      Promise.all(promises).then(() => {
         logPerf('About page loaded', 'complete');
-        
-        if (!companies || companies.length === 0) {
-          document.getElementById('aboutContentArea').innerHTML = 
+
+        if (!allCompaniesData || allCompaniesData.length === 0) {
+          document.getElementById('aboutContentArea').innerHTML =
             '<div style="padding: 60px 20px; text-align: center;"><p style="font-size: 1.1em; color: rgba(107, 114, 128, 0.7);">No company information available in database.</p></div>';
           return;
         }
-        
-        // Cache the data
-        setCachedData(CACHE_KEYS.companyInfo, companies);
-        setCachedData(CACHE_KEYS.teams, teams);
-        setCachedData(CACHE_KEYS.products, products);
-        
-        allCompaniesData = companies;
-        // Sort companies alphabetically by CompanyName
-        allCompaniesData.sort((a, b) => (a.CompanyName || '').localeCompare(b.CompanyName || ''));
-        allTeamsData = teams || {};
-        allProductsData = products || [];
-        currentCompanyIndex = 0;
-        
-        const sidebar = document.getElementById('aboutSidebar');
-        let sidebarHtml = '';
-        companies.forEach((company, index) => {
-          const activeClass = index === 0 ? 'active' : '';
-          sidebarHtml += `<button class="brand-nav-item ${activeClass}" onclick="switchToCompany(${index})">${company.CompanyName}</button>`;
-        });
-        sidebar.innerHTML = sidebarHtml;
 
-        // Populate mobile dropdown
-        populateAboutMobileDropdown();
-
-        // Check if mobile and render all companies, otherwise render single page
-        if (window.innerWidth <= 768) {
-          renderAllCompaniesForMobile();
-        } else {
-          renderCompanyPage(0);
-        }
-        aboutPageLoaded = true;
-        dataReady.about = true;
+        renderAboutPage();
       }).catch((error) => {
         logPerf('About page error', error);
         console.error('Error loading About page data:', error);
-        document.getElementById('aboutContentArea').innerHTML = 
+        document.getElementById('aboutContentArea').innerHTML =
           '<div style="padding: 60px 20px; text-align: center;"><p style="font-size: 1.1em; color: rgba(107, 114, 128, 0.7);">Error loading company information.</p></div>';
       });
     }
@@ -7590,133 +7791,146 @@
       }, 200);
     }
     
-    // New function to render a single company page
-    function renderCompanyPage(index) {
-      const company = allCompaniesData[index];
-      if (!company) return;
-      
+    // OPTIMIZED: Unified helper function to generate company section HTML
+    // Reduces code duplication between desktop and mobile rendering
+    function generateCompanySectionHTML(company, index, isMobile = false) {
       const companyId = company.CompanyID || '';
       const teamMembers = allTeamsData[companyId] || [];
       const companyProducts = allProductsData.filter(p => p.CompanyName === company.CompanyName);
-      
-          const aboutContent = document.getElementById('aboutContentArea');
-      
-      // Calculate carousel pages
-      const teamPages = Math.ceil(teamMembers.length / 3);
-      const solutionPages = Math.ceil(companyProducts.length / 3);
-      
-      let html = `
+
+      const cardsPerPage = isMobile ? 2 : 3;
+      const teamPages = Math.ceil(teamMembers.length / cardsPerPage);
+      const solutionPages = Math.ceil(companyProducts.length / cardsPerPage);
+
+      // Use different ID prefixes for mobile vs desktop to avoid conflicts
+      const idSuffix = isMobile ? `mobile-${index}` : `${index}`;
+      const carouselPadding = isMobile ? 'padding: 0 12px;' : '';
+
+      return `
+        <div class="brand-content-grid" style="${!company.VideoURL ? 'grid-template-columns: 1fr;' : ''}">
+          <div class="brand-text">
+            <h2 style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+              ${company.LogoURL ? `<img src="${company.LogoURL}" alt="${company.CompanyName} logo" style="max-width: 50px; max-height: 50px; object-fit: contain;" onerror="this.style.display='none'">` : ''}
+              ${company.CompanyName}
+            </h2>
+
+            ${company.AboutText ? `<p style="color: rgba(55, 65, 81, 0.8); line-height: 1.6; margin-bottom: 20px;">${company.AboutText}</p>` : '<p style="color: rgba(107, 114, 128, 0.7); font-style: italic;">Content coming soon...</p>'}
+            ${company.WebsiteURL ? `<a href="${company.WebsiteURL}" target="_blank" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-size: 0.95em; display: inline-block; margin-top: -10px; margin-bottom: 20px;">Learn more on the ${company.CompanyName} website ↗</a>` : ''}
+          </div>
+
+          ${company.VideoURL ? `
+            <div class="brand-video">
+              <iframe src="${company.VideoURL}" frameborder="0" allowfullscreen></iframe>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Meet the Team Section -->
+        ${teamMembers.length > 0 ? `
+          <div class="company-section-divider">
+            <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Meet the Team</h3>
+            <div class="team-carousel-container" style="${carouselPadding}">
+              <button class="carousel-nav-btn prev" onclick="navigateCarousel('team-${idSuffix}', -1)" aria-label="Previous team members">
+                ‹
+              </button>
+              <div class="team-carousel-wrapper">
+                <div class="team-carousel" id="team-carousel-${idSuffix}">
+                  ${teamMembers.map((member, memberIndex) => `
+                    <div class="team-member-card">
+                      <h4 class="team-member-name" style="margin-bottom: -2px; line-height: 1.6;">
+                        ${member.PersonName}
+                      </h4>
+                      <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
+                      ${member['Email Address'] ?
+                        `<button class="team-member-email-btn" id="email-btn-${idSuffix}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', '${idSuffix}', ${memberIndex})">
+                          <use href="#icon-copy"></use>
+                          <span>Copy email</span>
+                        </button>` :
+                        ''}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <button class="carousel-nav-btn next" onclick="navigateCarousel('team-${idSuffix}', 1)" aria-label="Next team members">
+                ›
+              </button>
+              ${teamPages > 1 ? `
+                <div class="carousel-pagination" id="team-pagination-${idSuffix}">
+                  ${Array.from({ length: teamPages }, (_, i) => `
+                    <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('team-${idSuffix}', ${i})" aria-label="Go to page ${i + 1}"></button>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- Our Solutions Section (exclude Axiom GRC) -->
+        ${company.CompanyName !== 'Axiom GRC' && companyProducts.length > 0 ? `
+          <div class="company-section-divider">
+            <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Our Solutions</h3>
+            <div class="solutions-carousel-container" style="${carouselPadding}">
+              <button class="carousel-nav-btn prev" onclick="navigateCarousel('solutions-${idSuffix}', -1)" aria-label="Previous solutions">
+                ‹
+              </button>
+              <div class="solutions-carousel-wrapper">
+                <div class="solutions-carousel" id="solutions-carousel-${idSuffix}">
+                  ${companyProducts.map(product => `
+                    <div class="solution-item">
+                      <div class="solution-info">
+                        <h4 class="solution-name">${product.ProductName}</h4>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <button class="carousel-nav-btn next" onclick="navigateCarousel('solutions-${idSuffix}', 1)" aria-label="Next solutions">
+                ›
+              </button>
+              ${solutionPages > 1 ? `
+                <div class="carousel-pagination" id="solutions-pagination-${idSuffix}">
+                  ${Array.from({ length: solutionPages }, (_, i) => `
+                    <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('solutions-${idSuffix}', ${i})" aria-label="Go to page ${i + 1}"></button>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+          <p style="text-align: center; margin-top: 16px; font-size: 0.9em;">
+            <a href="#" onclick="navigateToProduct('${company.CompanyName}'); return false;" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
+              Learn more about our solutions here →
+            </a>
+          </p>
+        ` : ''}
+      `;
+    }
+
+    // Render a single company page (desktop view)
+    function renderCompanyPage(index) {
+      const company = allCompaniesData[index];
+      if (!company) return;
+
+      const companyId = company.CompanyID || '';
+      const teamMembers = allTeamsData[companyId] || [];
+      const companyProducts = allProductsData.filter(p => p.CompanyName === company.CompanyName);
+      const aboutContent = document.getElementById('aboutContentArea');
+
+      const html = `
         <div class="company-page-view">
           <div class="brand-section">
-                <div class="brand-content-grid" style="${!company.VideoURL ? 'grid-template-columns: 1fr;' : ''}">
-                  <div class="brand-text">
-                    <h2 style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                      ${company.LogoURL ? `<img src="${company.LogoURL}" alt="${company.CompanyName} logo" style="max-width: 50px; max-height: 50px; object-fit: contain;" onerror="this.style.display='none'">` : ''}
-                      ${company.CompanyName}
-                    </h2>
-                    
-                    ${company.AboutText ? `<p style="color: rgba(55, 65, 81, 0.8); line-height: 1.6; margin-bottom: 20px;">${company.AboutText}</p>` : '<p style="color: rgba(107, 114, 128, 0.7); font-style: italic;">Content coming soon...</p>'}
-                    ${company.WebsiteURL ? `<a href="${company.WebsiteURL}" target="_blank" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-size: 0.95em; display: inline-block; margin-top: -10px; margin-bottom: 20px;">Learn more on the ${company.CompanyName} website ↗</a>` : ''}
-                  </div>
-                  
-                  ${company.VideoURL ? `
-                    <div class="brand-video">
-                      <iframe src="${company.VideoURL}" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                  ` : ''}
-                </div>
-            
-            <!-- Meet the Team Section -->
-            ${teamMembers.length > 0 ? `
-              <div class="company-section-divider">
-                <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Meet the Team</h3>
-                <div class="team-carousel-container">
-                  <button class="carousel-nav-btn prev" onclick="navigateCarousel('team-${index}', -1)" aria-label="Previous team members">
-                    ‹
-                  </button>
-                  <div class="team-carousel-wrapper">
-                    <div class="team-carousel" id="team-carousel-${index}">
-                      ${teamMembers.map((member, memberIndex) => `
-                        <div class="team-member-card">
-                          <h4 class="team-member-name" style="margin-bottom: -2px; line-height: 1.6;">
-                            ${member.PersonName}
-                          </h4>
-                          <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
-                          ${member['Email Address'] ? 
-                            `<button class="team-member-email-btn" id="email-btn-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', ${index}, ${memberIndex})">
-                              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
-                              </svg>
-                              <span>Copy email</span>
-                            </button>` : 
-                            ''}
-                        </div>
-                      `).join('')}
-                    </div>
-                  </div>
-                  <button class="carousel-nav-btn next" onclick="navigateCarousel('team-${index}', 1)" aria-label="Next team members">
-                    ›
-                  </button>
-                  ${teamPages > 1 ? `
-                    <div class="carousel-pagination" id="team-pagination-${index}">
-                      ${Array.from({ length: teamPages }, (_, i) => `
-                        <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('team-${index}', ${i})" aria-label="Go to page ${i + 1}"></button>
-                      `).join('')}
-                    </div>
-                  ` : ''}
-                </div>
-              </div>
-            ` : ''}
-            
-            <!-- Our Solutions Section (exclude Axiom GRC) -->
-            ${company.CompanyName !== 'Axiom GRC' && companyProducts.length > 0 ? `
-              <div class="company-section-divider">
-                <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Our Solutions</h3>
-                <div class="solutions-carousel-container">
-                  <button class="carousel-nav-btn prev" onclick="navigateCarousel('solutions-${index}', -1)" aria-label="Previous solutions">
-                    ‹
-                  </button>
-                  <div class="solutions-carousel-wrapper">
-                    <div class="solutions-carousel" id="solutions-carousel-${index}">
-                      ${companyProducts.map(product => `
-                        <div class="solution-item">
-                          <div class="solution-info">
-                            <h4 class="solution-name">${product.ProductName}</h4>
-                          </div>
-                        </div>
-                      `).join('')}
-                    </div>
-                  </div>
-                  <button class="carousel-nav-btn next" onclick="navigateCarousel('solutions-${index}', 1)" aria-label="Next solutions">
-                    ›
-                  </button>
-                  ${solutionPages > 1 ? `
-                    <div class="carousel-pagination" id="solutions-pagination-${index}">
-                      ${Array.from({ length: solutionPages }, (_, i) => `
-                        <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('solutions-${index}', ${i})" aria-label="Go to page ${i + 1}"></button>
-                      `).join('')}
-                    </div>
-                  ` : ''}
-                </div>
-              </div>
-              <p style="text-align: center; margin-top: 16px; font-size: 0.9em;">
-                  <a href="#" onclick="navigateToProduct('${company.CompanyName}'); return false;" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
-                    Learn more about our solutions here →
-                  </a>
-                </p>
-              ` : ''}
-              </div>
-              </div>
-            `;
-          
-          aboutContent.innerHTML = html;
-      
+            ${generateCompanySectionHTML(company, index, false)}
+          </div>
+        </div>
+      `;
+
+      aboutContent.innerHTML = html;
+
       // Initialize carousels
       initializeCarousel(`team-carousel-${index}`, teamMembers.length);
       if (companyProducts.length > 0) {
         initializeCarousel(`solutions-carousel-${index}`, companyProducts.length);
       }
-      
+
       // Scroll to top
       aboutContent.scrollTo({
         top: 0,
@@ -7725,118 +7939,16 @@
     }
 
     // Function to render all companies for mobile view (scrollable)
+    // OPTIMIZED: Now uses unified generateCompanySectionHTML helper
     function renderAllCompaniesForMobile() {
       const aboutContent = document.getElementById('aboutContentArea');
       let html = '<div class="about-mobile-all-companies">';
-      const cardsPerPage = window.innerWidth <= 768 ? 2 : 3;
 
       allCompaniesData.forEach((company, index) => {
-        const companyId = company.CompanyID || '';
-        const teamMembers = allTeamsData[companyId] || [];
-        const companyProducts = allProductsData.filter(p => p.CompanyName === company.CompanyName);
-        const teamPages = Math.ceil(teamMembers.length / cardsPerPage);
-        const solutionPages = Math.ceil(companyProducts.length / cardsPerPage);
-
         html += `
           <div class="about-mobile-company-section" id="company-section-${index}">
             <div class="brand-section">
-              <div class="brand-content-grid" style="${!company.VideoURL ? 'grid-template-columns: 1fr;' : ''}">
-                <div class="brand-text">
-                  <h2 style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                    ${company.LogoURL ? `<img src="${company.LogoURL}" alt="${company.CompanyName} logo" style="max-width: 50px; max-height: 50px; object-fit: contain;" onerror="this.style.display='none'">` : ''}
-                    ${company.CompanyName}
-                  </h2>
-
-                  ${company.AboutText ? `<p style="color: rgba(55, 65, 81, 0.8); line-height: 1.6; margin-bottom: 20px;">${company.AboutText}</p>` : '<p style="color: rgba(107, 114, 128, 0.7); font-style: italic;">Content coming soon...</p>'}
-                  ${company.WebsiteURL ? `<a href="${company.WebsiteURL}" target="_blank" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-size: 0.95em; display: inline-block; margin-top: -10px; margin-bottom: 20px;">Learn more on the ${company.CompanyName} website ↗</a>` : ''}
-                </div>
-
-                ${company.VideoURL ? `
-                  <div class="brand-video">
-                    <iframe src="${company.VideoURL}" frameborder="0" allowfullscreen></iframe>
-                  </div>
-                ` : ''}
-              </div>
-
-              <!-- Meet the Team Section -->
-              ${teamMembers.length > 0 ? `
-                <div class="company-section-divider">
-                  <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Meet the Team</h3>
-                  <div class="team-carousel-container" style="padding: 0 12px;">
-                    <button class="carousel-nav-btn prev" onclick="navigateCarousel('team-mobile-${index}', -1)" aria-label="Previous team members">
-                      ‹
-                    </button>
-                    <div class="team-carousel-wrapper">
-                      <div class="team-carousel" id="team-carousel-mobile-${index}">
-                        ${teamMembers.map((member, memberIndex) => `
-                          <div class="team-member-card">
-                            <h4 class="team-member-name" style="margin-bottom: -2px; line-height: 1.6;">
-                              ${member.PersonName}
-                            </h4>
-                            <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
-                            ${member['Email Address'] ?
-                              `<button class="team-member-email-btn" id="email-btn-mobile-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', 'mobile-${index}', ${memberIndex})">
-                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
-                                </svg>
-                                <span>Copy email</span>
-                              </button>` :
-                              ''}
-                          </div>
-                        `).join('')}
-                      </div>
-                    </div>
-                    <button class="carousel-nav-btn next" onclick="navigateCarousel('team-mobile-${index}', 1)" aria-label="Next team members">
-                      ›
-                    </button>
-                    ${teamPages > 1 ? `
-                      <div class="carousel-pagination" id="team-pagination-mobile-${index}">
-                        ${Array.from({ length: teamPages }, (_, i) => `
-                          <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('team-mobile-${index}', ${i})" aria-label="Go to page ${i + 1}"></button>
-                        `).join('')}
-                      </div>
-                    ` : ''}
-                  </div>
-                </div>
-              ` : ''}
-
-              <!-- Our Solutions Section -->
-              ${company.CompanyName !== 'Axiom GRC' && companyProducts.length > 0 ? `
-                <div class="company-section-divider">
-                  <h3 style="color: rgba(31, 41, 55, 0.85); margin-bottom: 1px; font-size: 1.2em; font-weight: 700;">Our Solutions</h3>
-                  <div class="solutions-carousel-container" style="padding: 0 12px;">
-                    <button class="carousel-nav-btn prev" onclick="navigateCarousel('solutions-mobile-${index}', -1)" aria-label="Previous solutions">
-                      ‹
-                    </button>
-                    <div class="solutions-carousel-wrapper">
-                      <div class="solutions-carousel" id="solutions-carousel-mobile-${index}">
-                        ${companyProducts.map(product => `
-                          <div class="solution-item">
-                            <div class="solution-info">
-                              <h4 class="solution-name">${product.ProductName}</h4>
-                            </div>
-                          </div>
-                        `).join('')}
-                      </div>
-                    </div>
-                    <button class="carousel-nav-btn next" onclick="navigateCarousel('solutions-mobile-${index}', 1)" aria-label="Next solutions">
-                      ›
-                    </button>
-                    ${solutionPages > 1 ? `
-                      <div class="carousel-pagination" id="solutions-pagination-mobile-${index}">
-                        ${Array.from({ length: solutionPages }, (_, i) => `
-                          <button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarouselPage('solutions-mobile-${index}', ${i})" aria-label="Go to page ${i + 1}"></button>
-                        `).join('')}
-                      </div>
-                    ` : ''}
-                  </div>
-                </div>
-                <p style="text-align: center; margin-top: 16px; font-size: 0.9em;">
-                    <a href="#" onclick="navigateToProduct('${company.CompanyName}'); return false;" style="color: rgba(99, 102, 241, 0.9); text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
-                      Learn more about our solutions here →
-                    </a>
-                  </p>
-              ` : ''}
+              ${generateCompanySectionHTML(company, index, true)}
             </div>
           </div>
         `;
@@ -7845,6 +7957,7 @@
       html += '</div>';
       aboutContent.innerHTML = html;
 
+      // Initialize carousels for all companies
       allCompaniesData.forEach((company, index) => {
         const companyId = company.CompanyID || '';
         const teamMembers = allTeamsData[companyId] || [];
@@ -8281,8 +8394,10 @@
       if (selectedProducts.length === 0) {
         summary.textContent = 'None selected';
       } else {
+        // OPTIMIZED: Use lookup map for O(1) access per product
+        const productMap = getProductLookupMap();
         const names = selectedProducts.map(id => {
-          const product = allProducts.find(p => p.ProductID === id);
+          const product = productMap.get(id);
           return product ? product.ProductName : id;
         });
         summary.textContent = names.join(', ');
@@ -8366,10 +8481,12 @@
         alert('Please fill in all required fields');
         return;
       }
-      
+
+      // OPTIMIZED: Use lookup map for O(1) access per product
+      const productMap = getProductLookupMap();
       const selectedProductNames = selectedProducts
         .map(id => {
-          const product = allProducts.find(p => p.ProductID === id);
+          const product = productMap.get(id);
           return product ? product.ProductName : null;
         })
         .filter(Boolean);
@@ -8663,14 +8780,17 @@
     function populateHistoryFilters() {
       const industrySelect = document.getElementById('historyFilterIndustry');
       const brandSelect = document.getElementById('historyFilterBrand');
-      
+
       // Get unique industries from rules
       const industries = new Set();
       const brands = new Set();
-      
+
+      // OPTIMIZED: Use product lookup map instead of Array.find()
+      const productMap = getProductLookupMap();
+
       allHistoryRules.forEach(rule => {
-        const productA = allProducts.find(p => p.ProductID === rule.ProductA);
-        const productB = allProducts.find(p => p.ProductID === rule.ProductB);
+        const productA = productMap.get(rule.ProductA);
+        const productB = productMap.get(rule.ProductB);
         
         if (productA) {
           brands.add(productA.CompanyName);
@@ -8714,21 +8834,27 @@
     function renderHistoryRules(rules) {
       const list = document.getElementById('historyList');
       list.innerHTML = '';
-      
+
       if (rules.length === 0) {
         list.innerHTML = '<p style="text-align: center; color: rgba(107, 114, 128, 0.7); padding: 40px;">No cross-sell combinations found.</p>';
         return;
       }
-      
+
+      // OPTIMIZED: Use product lookup map instead of Array.find() for O(1) lookups
+      const productMap = getProductLookupMap();
+
+      // OPTIMIZED: Use DocumentFragment for batch DOM updates
+      const fragment = document.createDocumentFragment();
+
       rules.forEach((rule, index) => {
-        const productA = allProducts.find(p => p.ProductID === rule.ProductA);
-        const productB = allProducts.find(p => p.ProductID === rule.ProductB);
-        
+        const productA = productMap.get(rule.ProductA);
+        const productB = productMap.get(rule.ProductB);
+
         if (!productA || !productB) return;
-        
+
         const logoA = productA.CompanyLogoURL ? `<img src="${productA.CompanyLogoURL}" alt="${productA.CompanyName} logo" class="history-company-logo" onerror="this.style.display='none'">` : '';
         const logoB = productB.CompanyLogoURL ? `<img src="${productB.CompanyLogoURL}" alt="${productB.CompanyName} logo" class="history-company-logo" onerror="this.style.display='none'">` : '';
-        
+
         const row = document.createElement('div');
         row.className = 'history-row';
         row.dataset.index = index;
@@ -8763,8 +8889,10 @@
           </div>
           ${clientCountHtml ? `<div class="history-client-count-mobile">${clientCountHtml}</div>` : ''}
         `;
-        list.appendChild(row);
+        fragment.appendChild(row);
       });
+
+      list.appendChild(fragment);
     }
     
     // Filter history list based on search input and filters
@@ -8774,11 +8902,14 @@
       const selectedBrand = document.getElementById('historyFilterBrand').value;
       const selectedSize = document.getElementById('historyClientSize').value;
       const sortBy = document.getElementById('historySortBy').value;
-      
+
+      // OPTIMIZED: Use product lookup map instead of Array.find()
+      const productMap = getProductLookupMap();
+
       // Filter rules
       let filteredRules = allHistoryRules.filter(rule => {
-        const productA = allProducts.find(p => p.ProductID === rule.ProductA);
-        const productB = allProducts.find(p => p.ProductID === rule.ProductB);
+        const productA = productMap.get(rule.ProductA);
+        const productB = productMap.get(rule.ProductB);
         
         if (!productA || !productB) return false;
         
@@ -8860,38 +8991,44 @@
           const countB = parseInt(b.ClientCount || b.clientCount || 0);
           return countA - countB; // Low to high
         });
-      } else if (activeSortBy === 'productname-asc') {
-        filteredRules.sort((a, b) => {
-          const productA_a = allProducts.find(p => p.ProductID === a.ProductA);
-          const productA_b = allProducts.find(p => p.ProductID === b.ProductA);
-          const nameA = productA_a ? (productA_a.ProductName || '').toLowerCase() : '';
-          const nameB = productA_b ? (productA_b.ProductName || '').toLowerCase() : '';
-          return nameA.localeCompare(nameB);
-        });
-      } else if (activeSortBy === 'productname-desc') {
-        filteredRules.sort((a, b) => {
-          const productA_a = allProducts.find(p => p.ProductID === a.ProductA);
-          const productA_b = allProducts.find(p => p.ProductID === b.ProductA);
-          const nameA = productA_a ? (productA_a.ProductName || '').toLowerCase() : '';
-          const nameB = productA_b ? (productA_b.ProductName || '').toLowerCase() : '';
-          return nameB.localeCompare(nameA);
-        });
-      } else if (activeSortBy === 'companyname-asc') {
-        filteredRules.sort((a, b) => {
-          const productA_a = allProducts.find(p => p.ProductID === a.ProductA);
-          const productA_b = allProducts.find(p => p.ProductID === b.ProductA);
-          const nameA = productA_a ? (productA_a.CompanyName || '').toLowerCase() : '';
-          const nameB = productA_b ? (productA_b.CompanyName || '').toLowerCase() : '';
-          return nameA.localeCompare(nameB);
-        });
-      } else if (activeSortBy === 'companyname-desc') {
-        filteredRules.sort((a, b) => {
-          const productA_a = allProducts.find(p => p.ProductID === a.ProductA);
-          const productA_b = allProducts.find(p => p.ProductID === b.ProductA);
-          const nameA = productA_a ? (productA_a.CompanyName || '').toLowerCase() : '';
-          const nameB = productA_b ? (productA_b.CompanyName || '').toLowerCase() : '';
-          return nameB.localeCompare(nameA);
-        });
+      } else if (activeSortBy === 'productname-asc' || activeSortBy === 'productname-desc' ||
+                 activeSortBy === 'companyname-asc' || activeSortBy === 'companyname-desc') {
+        // OPTIMIZED: Get product map once before sorting instead of calling Array.find() in each comparison
+        const productMap = getProductLookupMap();
+
+        if (activeSortBy === 'productname-asc') {
+          filteredRules.sort((a, b) => {
+            const productA_a = productMap.get(a.ProductA);
+            const productA_b = productMap.get(b.ProductA);
+            const nameA = productA_a ? (productA_a.ProductName || '').toLowerCase() : '';
+            const nameB = productA_b ? (productA_b.ProductName || '').toLowerCase() : '';
+            return nameA.localeCompare(nameB);
+          });
+        } else if (activeSortBy === 'productname-desc') {
+          filteredRules.sort((a, b) => {
+            const productA_a = productMap.get(a.ProductA);
+            const productA_b = productMap.get(b.ProductA);
+            const nameA = productA_a ? (productA_a.ProductName || '').toLowerCase() : '';
+            const nameB = productA_b ? (productA_b.ProductName || '').toLowerCase() : '';
+            return nameB.localeCompare(nameA);
+          });
+        } else if (activeSortBy === 'companyname-asc') {
+          filteredRules.sort((a, b) => {
+            const productA_a = productMap.get(a.ProductA);
+            const productA_b = productMap.get(b.ProductA);
+            const nameA = productA_a ? (productA_a.CompanyName || '').toLowerCase() : '';
+            const nameB = productA_b ? (productA_b.CompanyName || '').toLowerCase() : '';
+            return nameA.localeCompare(nameB);
+          });
+        } else if (activeSortBy === 'companyname-desc') {
+          filteredRules.sort((a, b) => {
+            const productA_a = productMap.get(a.ProductA);
+            const productA_b = productMap.get(b.ProductA);
+            const nameA = productA_a ? (productA_a.CompanyName || '').toLowerCase() : '';
+            const nameB = productA_b ? (productA_b.CompanyName || '').toLowerCase() : '';
+            return nameB.localeCompare(nameA);
+          });
+        }
       }
       
       // Render filtered rules
