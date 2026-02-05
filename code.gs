@@ -11,6 +11,7 @@ var SHEET_ID = SpreadsheetApp.getActiveSpreadsheet().getId();
 
 function doGet(e) {
   return HtmlService.createHtmlOutputFromFile('Index')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setTitle('Axiom Xplore')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
