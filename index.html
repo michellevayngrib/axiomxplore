@@ -543,6 +543,9 @@
       fill: currentColor;
       flex-shrink: 0;
     }
+    .team-member-email-btn svg path {
+      fill: currentColor;
+    }
     
     .team-member-email-btn:hover {
       color: rgba(99, 102, 241, 0.8);
@@ -2256,7 +2259,7 @@
       background: rgba(249, 250, 251, 0.4);
     }
     
-    /*  Cross-Sell History - Toolbar and filters */
+    /*  Popular Cross-Sell - Toolbar and filters */
     .history-filters {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
@@ -3244,6 +3247,9 @@
         text-align: center;
       }
 
+      .team-member-card .team-member-email-btn {
+        min-height: 44px;
+      }
       .team-member-card .team-member-email-btn svg {
         position: absolute;
         left: 6px;
@@ -3372,7 +3378,7 @@
         min-height: auto !important;
       }
 
-      /* Cross-sell History - force horizontal row layout */
+      /* Popular Cross-Sell - force horizontal row layout */
       .history-row {
         display: grid !important;
         grid-template-columns: 1fr auto 1fr;
@@ -3510,14 +3516,17 @@
         padding: 8px 14px !important;
       }
 
-      /* Modal improvements - ensure buttons always visible on mobile */
+      /* Modal improvements - ensure buttons always visible on mobile (e.g. iPhone) */
+      .modal.active {
+        align-items: flex-end;
+      }
       .modal-content {
         width: 98%;
         max-width: 98%;
         margin: 5px;
         padding: 0;
         border-radius: 16px;
-        max-height: 95vh;
+        max-height: min(85vh, 100dvh);
         display: flex;
         flex-direction: column;
       }
@@ -3539,6 +3548,7 @@
       .modal-actions {
         flex-shrink: 0;
         padding: 16px 15px;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
@@ -3933,7 +3943,7 @@
               </div>
               
               <div class="form-group">
-                <label>Current Situation</label>
+                <label>Current Situation — <em style="font-weight: normal;">Help us understand when teams look for opportunities (it won't affect your recommendations).</em></label>
                 <div class="situation-grid">
                   <button class="situation-btn" data-situation="Renewal" onclick="selectSituation('Renewal')">Contract Renewal</button>
                   <button class="situation-btn" data-situation="Expansion" onclick="selectSituation('Expansion')">Business Expansion</button>
@@ -3961,7 +3971,7 @@
         </div>
       </div>
       
-      <!-- CROSS-SELL HISTORY SUB-TAB -->
+      <!-- POPULAR CROSS-SELL SUB-TAB -->
       <div id="historySubTab" class="sub-content">
         <div class="history-filters">
           <div class="filter-item">
@@ -3995,8 +4005,8 @@
           <div class="filter-item">
             <label>Sort By</label>
             <select id="historySortBy" onchange="filterHistoryList()">
-              <option value="clientcount-desc" selected data-display="Clients">Clients (high → low)</option>
-              <option value="clientcount-asc">Clients (low → high)</option>
+              <option value="clientcount-desc" selected data-display="Popularity">Popularity: high → low</option>
+              <option value="clientcount-asc">Popularity: low → high</option>
               <option value="productname-asc">Product Name: A-Z</option>
               <option value="productname-desc">Product Name: Z-A</option>
               <option value="companyname-asc">Company Name: A-Z</option>
@@ -5126,7 +5136,7 @@
         if (!dataReady.history) {
           const historyList = document.getElementById('historyList');
           if (historyList) {
-            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading popular cross-sell...</p></div>';
+            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading Popular Cross-Sell...</p></div>';
           }
         }
       } else if (pageName === 'resources') {
@@ -5285,7 +5295,7 @@
           // Show loading spinner inside tab content
           const historyList = document.getElementById('historyList');
           if (historyList) {
-            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading popular cross-sell...</p></div>';
+            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading Popular Cross-Sell...</p></div>';
           }
           
           // Wait for data
@@ -5433,9 +5443,9 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
             ${company ? `<span style="font-size: 0.8em; color: rgba(99, 102, 241, 0.8); font-weight: 500;">${company}</span>` : '<span></span>'}
             ${email ? `
-              <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})" style="font-size: 0.75em; padding: 4px 10px; margin: 0; flex-shrink: 0;">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 11px; height: 11px;">
-                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+              <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})" style="font-size: 0.75em; padding: 4px 10px; margin: 0; flex-shrink: 0; min-height: 44px;">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 11px; height: 11px;" fill="currentColor">
+                  <path fill="currentColor" d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                 </svg>
                 <span>Copy email</span>
               </button>
@@ -5459,8 +5469,8 @@
             ${company ? `<span style="font-size: 1em; color: rgba(107, 114, 128, 0.8); font-weight: 500;">${company}</span>` : ''}
             ${email ? `
               <button class="team-member-email-btn" id="contact-email-btn-${index}" onclick="copyContactEmail('${email.replace(/'/g, "\\'")}', ${index})">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                  <path fill="currentColor" d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                 </svg>
                 <span>Copy email</span>
               </button>
@@ -5472,28 +5482,48 @@
       return row;
     }
     
-    // Copy contact email function (similar to copyTeamMemberEmail)
+    // Copy contact email: call clipboard in same user gesture (iOS), with fallback and feedback
     function copyContactEmail(email, contactIndex) {
-      navigator.clipboard.writeText(email).then(function() {
-        const btn = document.getElementById(`contact-email-btn-${contactIndex}`);
-        if (btn) {
-          const originalHTML = btn.innerHTML;
-          btn.innerHTML = `
-            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px; fill: currentColor; flex-shrink: 0;">
-              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-            </svg>
-            <span>Email copied</span>
-          `;
-          btn.classList.add('copied');
-          
-          setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.classList.remove('copied');
-          }, 2000);
-        }
-      }).catch(function(err) {
-        console.error('Failed to copy email:', err);
-      });
+      var btn = document.getElementById('contact-email-btn-' + contactIndex);
+      var originalHTML = btn ? btn.innerHTML : '';
+      function showSuccess() {
+        if (!btn) return;
+        btn.innerHTML = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px;" fill="currentColor"><path fill="currentColor" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg><span>Email copied</span>';
+        btn.classList.add('copied');
+        setTimeout(function() { if (btn) { btn.innerHTML = originalHTML; btn.classList.remove('copied'); } }, 2000);
+      }
+      function showFailure() {
+        if (!btn) return;
+        btn.innerHTML = '<span>Copy failed</span>';
+        setTimeout(function() { if (btn) { btn.innerHTML = originalHTML; } }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(showSuccess).catch(function() {
+          var ta = document.createElement('textarea');
+          ta.value = email;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute'; ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            if (document.execCommand('copy')) showSuccess();
+            else showFailure();
+          } catch (e) { showFailure(); }
+          document.body.removeChild(ta);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = email;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute'; ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          if (document.execCommand('copy')) showSuccess();
+          else showFailure();
+        } catch (e) { showFailure(); }
+        document.body.removeChild(ta);
+      }
     }
     
     // Load and render resources
@@ -7429,26 +7459,46 @@
     }
     
     function copyTeamMemberEmail(email, companyIndex, memberIndex) {
-      navigator.clipboard.writeText(email).then(function() {
-        const btn = document.getElementById(`email-btn-${companyIndex}-${memberIndex}`);
-        if (btn) {
-          const originalHTML = btn.innerHTML;
-          btn.innerHTML = `
-            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px; fill: currentColor; flex-shrink: 0;">
-              <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-            </svg>
-            <span>Email copied</span>
-          `;
-          btn.classList.add('copied');
-          
-          setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.classList.remove('copied');
-          }, 2000);
-        }
-      }).catch(function(err) {
-        console.error('Failed to copy email:', err);
-      });
+      var btn = document.getElementById('email-btn-' + companyIndex + '-' + memberIndex);
+      var originalHTML = btn ? btn.innerHTML : '';
+      function showSuccess() {
+        if (!btn) return;
+        btn.innerHTML = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="width: 12px; height: 12px;" fill="currentColor"><path fill="currentColor" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg><span>Email copied</span>';
+        btn.classList.add('copied');
+        setTimeout(function() { if (btn) { btn.innerHTML = originalHTML; btn.classList.remove('copied'); } }, 2000);
+      }
+      function showFailure() {
+        if (!btn) return;
+        btn.innerHTML = '<span>Copy failed</span>';
+        setTimeout(function() { if (btn) { btn.innerHTML = originalHTML; } }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(showSuccess).catch(function() {
+          var ta = document.createElement('textarea');
+          ta.value = email;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute'; ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            if (document.execCommand('copy')) showSuccess();
+            else showFailure();
+          } catch (e) { showFailure(); }
+          document.body.removeChild(ta);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = email;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute'; ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          if (document.execCommand('copy')) showSuccess();
+          else showFailure();
+        } catch (e) { showFailure(); }
+        document.body.removeChild(ta);
+      }
     }
     
     // Helper function to render about page from cached/fresh data
@@ -7644,8 +7694,8 @@
                           <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
                           ${member['Email Address'] ? 
                             `<button class="team-member-email-btn" id="email-btn-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', ${index}, ${memberIndex})">
-                              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+                              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                <path fill="currentColor" d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                               </svg>
                               <span>Copy email</span>
                             </button>` : 
@@ -7775,9 +7825,9 @@
                             </h4>
                             <p class="team-member-title" style="margin-top: -2px; margin-bottom: -2px;line-height: 1.4;">${member.PersonTitle}</p>
                             ${member['Email Address'] ?
-                              `<button class="team-member-email-btn" id="email-btn-mobile-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', 'mobile-${index}', ${memberIndex})">
-                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
+                              `<button class="team-member-email-btn" id="email-btn-mobile-${index}-${memberIndex}" onclick="copyTeamMemberEmail('${member['Email Address'].replace(/'/g, "\\'")}', 'mobile-${index}', ${memberIndex})" style="min-height: 44px;">
+                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                  <path fill="currentColor" d="M4 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h-1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1V4H2z"/>
                                 </svg>
                                 <span>Copy email</span>
                               </button>` :
@@ -8421,7 +8471,7 @@
       
       trackEvent('crosssell_results', {
         count: recommendedNames.length,
-        recommendations: recommendedNames.join('; '),
+        recommendations: recommendedNames.join(', '),
         page: 'crosssell'
       });
       
@@ -8477,7 +8527,7 @@
                 const upperDs = ds.trim().toUpperCase();
                 if (upperDs === 'REAL' && opp.clientCount) {
                   pillTags.push({
-                    text: `${opp.clientCount} client${opp.clientCount !== 1 ? 's' : ''} use both products!`,
+                    text: 'Based on real client usage',
                     icon: 'ph-users'
                   });
                 } else if (upperDs === 'EXPERT') {
@@ -8549,7 +8599,7 @@
       resultsDiv.innerHTML = html;
     }
     
-    // Cross-Sell History - Promise-based version
+    // Popular Cross-Sell - Promise-based version
     function loadCrossSellHistoryPromise(isBackgroundRefresh = false) {
       return new Promise((resolve, reject) => {
         google.script.run
@@ -8619,7 +8669,7 @@
       const sortSelect = document.getElementById('historySortBy');
       if (sortSelect) {
         sortSelect.value = 'clientcount-desc';
-        // Customize display: show "Clients" when closed, "Clients (high -> low)" in dropdown
+        // Customize display: show "Popularity" when closed, full label in dropdown
         const defaultOption = sortSelect.querySelector('option[value="clientcount-desc"]');
         if (defaultOption && defaultOption.hasAttribute('data-display')) {
           // Store original text
@@ -8732,9 +8782,6 @@
         const row = document.createElement('div');
         row.className = 'history-row';
         row.dataset.index = index;
-        const clientCount = rule.ClientCount || rule.clientCount || 0;
-        const clientCountHtml = clientCount && clientCount > 0 ? `${clientCount} client${clientCount !== 1 ? 's' : ''}` : '';
-
         row.innerHTML = `
           <div class="history-card">
             <div class="history-product-content">
@@ -8750,7 +8797,6 @@
               <div class="history-arrow-icon">←</div>
               <div class="history-arrow-icon">→</div>
             </div>
-            ${clientCountHtml ? `<div class="history-client-count">${clientCountHtml}</div>` : ''}
           </div>
           <div class="history-card">
             <div class="history-product-content">
@@ -8761,7 +8807,6 @@
               </div>
             </div>
           </div>
-          ${clientCountHtml ? `<div class="history-client-count-mobile">${clientCountHtml}</div>` : ''}
         `;
         list.appendChild(row);
       });
