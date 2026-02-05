@@ -1568,9 +1568,7 @@ function exportToSlides(options) {
             if (upperDs === 'EXPERT') {
               dataSourceBadges.push('Recommended by our cross-sell experts');
             } else if (upperDs === 'REAL' && opp.clientCount && parseInt(opp.clientCount) > 0) {
-              var count = parseInt(opp.clientCount);
-              var clientWord = count === 1 ? 'client' : 'clients';
-              dataSourceBadges.push(count + ' ' + clientWord + ' use both products!');
+              dataSourceBadges.push('Based on real client usage');
             } else if (upperDs === 'INFERRED') {
               dataSourceBadges.push('AI-Inferred pairing');
             }
@@ -1628,12 +1626,10 @@ function exportToSlides(options) {
             replaceTextInSlide(newSlide, '{{OPPORTUNITY_KEY_BENEFITS}}', '');
           }
           
-          // Client count - format as "X client/clients have both products"
+          // Client count - show generic message (no specific numbers)
           var clientCountText = '';
           if (opp.clientCount && parseInt(opp.clientCount) > 0) {
-            var count = parseInt(opp.clientCount);
-            var clientWord = count === 1 ? 'client' : 'clients';
-            clientCountText = count + ' ' + clientWord + ' have both products';
+            clientCountText = 'Based on real client usage';
           }
           replaceTextInSlide(newSlide, '{{OPPORTUNITY_CLIENT_COUNT}}', clientCountText);
           
