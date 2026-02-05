@@ -3895,7 +3895,7 @@
     <div id="crosssellPage" class="page-section">
       <div class="sub-tabs">
         <button class="sub-tab active" onclick="showSubTab('navigator')">Cross-Sell Finder</button>
-        <button class="sub-tab" onclick="showSubTab('history')">Cross-Sell History</button>
+        <button class="sub-tab" onclick="showSubTab('history')">Popular Cross-Sell</button>
       </div>
       
       <!-- SMART NAVIGATOR SUB-TAB -->
@@ -5126,7 +5126,7 @@
         if (!dataReady.history) {
           const historyList = document.getElementById('historyList');
           if (historyList) {
-            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading cross-sell history...</p></div>';
+            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading popular cross-sell...</p></div>';
           }
         }
       } else if (pageName === 'resources') {
@@ -5285,7 +5285,7 @@
           // Show loading spinner inside tab content
           const historyList = document.getElementById('historyList');
           if (historyList) {
-            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading cross-sell history...</p></div>';
+            historyList.innerHTML = '<div class="loading"><div class="spinner"></div><p style="color: rgba(55, 65, 81, 0.85);">Loading popular cross-sell...</p></div>';
           }
           
           // Wait for data
@@ -8421,7 +8421,7 @@
       
       trackEvent('crosssell_results', {
         count: recommendedNames.length,
-        recommendations: recommendedNames.join(', '),
+        recommendations: recommendedNames.join('; '),
         page: 'crosssell'
       });
       
@@ -8429,7 +8429,7 @@
         resultsDiv.innerHTML = `
           <div class="results-header">
             <h3>No Cross-Sell Opportunities Found</h3>
-            <p>It looks like there aren't any cross-sell opportunities in this case just yet! Check out the <a href="#" onclick="showSubTab('history'); return false;" style="color: #fbbf24; text-decoration: underline; cursor: pointer; font-weight: 600;">Cross-Sell History</a> tab for existing product pairings.</p>
+            <p>It looks like there aren't any cross-sell opportunities in this case just yet! Check out the <a href="#" onclick="showSubTab('history'); return false;" style="color: #fbbf24; text-decoration: underline; cursor: pointer; font-weight: 600;">Popular Cross-Sell</a> tab for existing product pairings.</p>
           </div>
         `;
         return;
